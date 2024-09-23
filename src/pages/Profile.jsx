@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-
-function Profile() {
-  return (
-    <div>
-      Profile
-    </div>
-  )
-}
-
-export default Profile
-=======
 import React, { useState, useEffect } from 'react';
 import profileImg from '../assets/img/profileImage.png'; // Replace with your path
 
@@ -224,4 +211,3 @@ function Profile() {
 }
 
 export default Profile;
->>>>>>> 19c933de68a70bd57abd822bf42cb82496393a1d
