@@ -75,6 +75,7 @@ function Profile() {
   };
 
   return (
+    <div className="bg-white min-h-screen flex flex-col items-center container max-w-7xl mx-auto overflow-y-auto">
     <div
       className={`min-h-screen flex flex-col items-center container mt-[20px] ml-[20px] ${
         theme === 'dark' ? 'bg-[#10141E]' : 'bg-white'
@@ -96,6 +97,36 @@ function Profile() {
         <h2 className="text-2xl font-bold mb-6">Settings</h2>
         {/* Form yoki ko'rinish */}
         {isEditMode ? (
+          <form className="space-y-6 p-8" onSubmit={handleSubmit}>
+            <div className="flex space-x-4">
+              <div className="w-1/2">
+                <label className="block text-gray-600">First name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className={`w-full p-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                  placeholder="Killian"
+                />
+                {errors.firstName && (
+                  <p className="text-red-500 text-sm">{errors.firstName}</p>
+                )}
+              </div>
+              <div className="w-1/2">
+                <label className="block text-gray-600">Last name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className={`w-full p-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded-lg`}
+                  placeholder="James"
+                />
+                {errors.lastName && (
+                  <p className="text-red-500 text-sm">{errors.lastName}</p>
+                )}
+              </div>
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="firstName" className="block text-sm font-medium">
