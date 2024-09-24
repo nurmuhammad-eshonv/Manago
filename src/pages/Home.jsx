@@ -1,12 +1,11 @@
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
+
 function Home() {
-  const navigate = useNavigate();
   return (
     <div>
-       <button className='p-3 rounded-lg  bg-amber-500' onClick={() => navigate("/profile")}>Profile</button>
+      Home
     </div>
   )
 }
 
 export default Home
-

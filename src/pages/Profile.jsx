@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import profileImg from '../assets/img/profileImage.png'; // Replace with your path
+import profileImg from '../assets/img/profileImage.png'; 
 
 function Profile() {
   const [formData, setFormData] = useState({
