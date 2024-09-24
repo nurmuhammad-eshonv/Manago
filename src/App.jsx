@@ -17,7 +17,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/detailes" element={<Detailes />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Registration />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </MainLoyaut>
     </ThemeProvider>
