@@ -1,5 +1,6 @@
+
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Detailes from "./pages/Detailes";
@@ -11,18 +12,36 @@ import { ThemeProvider } from "./context/ThemeContext";
 function App() {
   return (
     <ThemeProvider>
-      <MainLoyaut>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/detailes" element={<Detailes />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Registration />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/"
+            element={
+              <MainLoyaut>
+                <Home />
+              </MainLoyaut>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <MainLoyaut>
+                <Profile />
+              </MainLoyaut>
+            }
+          />
+          <Route
+            path="/detailes"
+            element={
+              <MainLoyaut>
+                <Detailes />
+              </MainLoyaut>
+            }
+          />
         </Routes>
-      </MainLoyaut>
     </ThemeProvider>
   );
 }
 
 export default App;
-
