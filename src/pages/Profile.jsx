@@ -71,7 +71,7 @@ function Profile() {
   };
 
   return (
-    <div className="bg-white min-h-screen flex flex-col items-center container mt-[20px] ml-[20px]">
+    <div className="bg-white min-h-screen flex flex-col items-center container max-w-7xl mx-auto overflow-y-auto">
       <div className="w-full h-[200px] bg-gradient-to-r from-blue-400 to-purple-500 relative">
         <img
           className="w-[137px] h-[137px] rounded-full border-4 border-white absolute left-[30px] top-[130px]"
@@ -94,7 +94,7 @@ function Profile() {
         </div>
 
         {isEditMode ? (
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6 p-8" onSubmit={handleSubmit}>
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <label className="block text-gray-600">First name</label>
