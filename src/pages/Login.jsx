@@ -1,68 +1,70 @@
+
 import logo2 from "../assets/img/manago.jpg";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Make sure axios is imported
 
 const Login = () => {
-   const navigate = useNavigate();
-   const [formData, setFormData] = useState({
-       email: "",
-       password: "",
-   });
+    const navigate = useNavigate();
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
 
-   const [errors, setErrors] = useState({});
-   const [showPassword, setShowPassword] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [showPassword, setShowPassword] = useState(false);
 
-   const handleChange = (e) => {
-       const { name, value } = e.target;
-       setFormData({
-           ...formData,
-           [name]: value,
-       });
-   };
+    const validateForm = () => {
+        const newErrors = {};
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-   const validateForm = () => {
-       const newErrors = {};
+        // Validate email
+        if (!emailRef.current.value) {
+            newErrors.email = "Email is required";
+        } else if (!emailRegex.test(emailRef.current.value)) {
+            newErrors.email = "Invalid email address";
+        }
 
-       // Validate email
-       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-       if (!formData.email) {
-           newErrors.email = "Email is required";
-       } else if (!emailRegex.test(formData.email)) {
-           newErrors.email = "Invalid email address";
-       }
+        // Validate password
+        if (!passwordRef.current.value) {
+            newErrors.password = "Password is required";
+        } else if (passwordRef.current.value.length < 6) {
+            newErrors.password = "Password must be at least 6 characters long";
+        }
 
-       // Validate password
-       if (!formData.password) {
-           newErrors.password = "Password is required";
-       } else if (formData.password.length < 6) {
-           newErrors.password = "Password must be at least 6 characters long";
-       }
+        return newErrors;
+    };
 
-       return newErrors;
-   };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-   const handleSubmit = (e) => {
-       e.preventDefault();
+        const validationErrors = validateForm();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return; 
+        }
 
-       const validationErrors = validateForm();
+        const loginData = {
+            email: emailRef.current.value,
+            password: passwordRef.current.value,
+        };
 
-       if (Object.keys(validationErrors).length > 0) {
-           setErrors(validationErrors);
-       } else {
-           // Retrieve registration data from localStorage
-           const storedData = JSON.parse(localStorage.getItem("formData"));
-
-           if (storedData) {
-               // Compare login credentials with registered data
-               if (formData.email === storedData.email && formData.password === storedData.password) {
-                    console.log("Login successful");
-                    navigate("/");
-                } else {
-                    setErrors({ login: "Invalid email or password" });
-                }
+        try {
+            const response = await axios.post("https://trello.vimlc.uz:8000/api/auth/login", loginData, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            console.log("Login successful:", response.data);
+            navigate("/"); 
+        } catch (error) {
+            console.error("Error during login:", error);
+            if (error.response) {
+                const apiErrors = error.response.data.errors || {};
+                setErrors(apiErrors); // Set API errors to state
+            } else if (error) {
+                setErrors({ api: "No response from the server. Please try again." });
             } else {
-                setErrors({ login: "No user found. Please register first." });
+                setErrors({ api: "An error occurred during login." });
             }
         }
     };
@@ -71,55 +73,52 @@ const Login = () => {
         <div className="min-h-screen flex">
             {/* Left Section */}
             <div className="w-1/2 bg-gradient-to-br from-purple-800 to-indigo-700 flex flex-col justify-center items-center text-white p-10">
-               <h1 className="text-4xl font-bold mb-4">MANAGO</h1>
-               <p className="text-xl mb-2">Website For Developers</p>
-               <p className="mb-8">
-                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                   eiusmod tempor incididunt.
-               </p>
-               <div className="relative">
-                   <img
-                       src={logo2}
-                       alt="Illustration"
-                       className="w-full h-auto rounded-[50%] w-60 h-32"
-                   />
-               </div>
-           </div>
+                <h1 className="text-4xl font-bold mb-4">MANAGO</h1>
+                <p className="text-xl mb-2">Website For Developers</p>
+                <p className="mb-8">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                    eiusmod tempor incididunt.
+                </p>
+                <div className="relative">
+                    <img
+                        src={logo2}
+                        alt="Illustration"
+                        className="rounded-[50%] w-64 h-52"
+                    />
+                </div>
+            </div>
 
             {/* Right Section */}
-           <div className="w-1/2 bg-white flex flex-col justify-center items-center p-10">
-               <h2 className="text-2xl font-bold mb-6">Welcome Back</h2>
+            <div className="w-1/2 bg-white flex flex-col justify-center items-center p-10">
+                <h2 className="text-2xl font-bold mb-6">Welcome Back</h2>
 
-                 <form className="w-full max-w-md" onSubmit={handleSubmit}>
-                     {/* Email */}
-                     <div className="mb-4">
-                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <form className="w-full max-w-md" onSubmit={handleSubmit}>
+                    {/* Email */}
+                    <div className="mb-4">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                             Email
                         </label>
                         <input
                             type="email"
                             id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
+                            ref={emailRef}
                             className={`mt-1 block w-full px-3 py-2 border ${errors.email ? "border-red-500" : "border-gray-300"} rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                             placeholder="johndoe@email.com"
                         />
                         {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                   </div>
+                    </div>
+
                     {/* Password */}
-                   <div className="mb-4">
-                       <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                         Password
-                     </label>
-                     <div className="relative">
-                         <input
-                             type={showPassword ? "text" : "password"}
-                             id="password"
-                             name="password"
-                             value={formData.password}
-                             onChange={handleChange}
-                             className={`mt-1 block w-full px-3 py-2 border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                    <div className="mb-4">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                            Password
+                        </label>
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                ref={passwordRef}
+                                className={`mt-1 block w-full px-3 py-2 border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                                 placeholder="**********"
                             />
                             <button
@@ -131,10 +130,10 @@ const Login = () => {
                             </button>
                         </div>
                         {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-                </div>
+                    </div>
 
-                   {/* Error Message for Invalid Login */}
-                    {errors.login && <p className="text-red-500 text-xs mt-1">{errors.login}</p>}
+                    {/* Error Message from API */}
+                    {errors.api && <p className="text-red-500 text-xs mt-1">{errors.api}</p>}
 
                     {/* Submit Button */}
                     <button
@@ -144,15 +143,15 @@ const Login = () => {
                         Login
                     </button>
                 </form>
- <p className="mt-4 text-sm text-gray-500">
-          no accounts yet/
-          <a href="/register" className="text-indigo-600 font-bold">
-            Sign up
-          </a>
-        </p> 
-             </div>
-         </div>
-     );
- }
- export default Login;
+                <p className="mt-4 text-sm text-gray-500">
+                    No accounts yet?
+                    <a href="/register" className="text-indigo-600 font-bold">
+                        Sign up
+                    </a>
+                </p>
+            </div>
+        </div>
+    );
+};
 
+export default Login;
