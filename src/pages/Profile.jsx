@@ -75,7 +75,7 @@ function Profile() {
   };
 
   return (
-    <div className=" pl-[20px] min-h-screen flex flex-col items-center container mx-auto overflow-y-auto">
+    <div className=" pl-[j0px] min-h-screen flex flex-col items-center container mx-auto overflow-y-auto">
       <div
         className={` flex flex-col items-center container ${
           theme === "dark" ? "" : "bg-white"
@@ -91,7 +91,7 @@ function Profile() {
 
         <div
           className={` w-full max-w-[1400px] p-8 shadow-lg rounded-lg ${
-            theme === "dark" ? "bg-[#1F2A37] text-white" : "bg-white text-black"
+            theme === "dark" ? " text-white" : "bg-white text-black"
           }`}
         >
           <h2 className="text-4xl font-bold mb-14 -mt-4 ml-[200px]">Settings</h2>
