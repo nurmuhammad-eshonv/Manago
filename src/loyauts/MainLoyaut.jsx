@@ -1,6 +1,6 @@
-import React from 'react';
-import Header from '../components/Header';
-import Navbar from '../components/Navbar';
+import React from "react";
+import Header from "../components/Header";
+import Navbar from "../components/Navbar";
 
 function MainLoyaut({ children }) {
   return (
@@ -8,9 +8,7 @@ function MainLoyaut({ children }) {
       <Navbar />
       <div className="flex-grow">
         <Header />
-        <main>
-          {children}
-        </main>
+        <main className="">{children}</main>
       </div>
     </div>
   );
