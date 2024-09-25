@@ -1,12 +1,6 @@
-
 @import url(https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700&display=swap);
 
 body {
-  font-family: 'DM Sans', sans-serif;
-  background-color: #F3F4F8;
-}
-.containerr {
-  max-width: 1480px;
-  margin : 0 auto;
-  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+  background-color: #f3f4f8;
 }
