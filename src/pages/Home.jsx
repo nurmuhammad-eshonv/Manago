@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PiUploadSimple } from "react-icons/pi";
 import { GoFileDirectory } from "react-icons/go";
-import { MdPublic, MdLock } from "react-icons/md"; // Public va Private ikonlar
+import { MdPublic, MdLock } from "react-icons/md"; 
 
 function Home() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -65,7 +65,7 @@ function Home() {
                         type="color"
                         value={color}
                         onChange={(e) => setColor(e.target.value)}
-                        className="input input-bordered w-full cursor-pointer"
+                        className=" w-full cursor-pointer"
                         style={{ height: "40px", width: "100%" }}
                       />
                     </div>
