@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { PiUploadSimple } from "react-icons/pi";
 import { GoFileDirectory } from "react-icons/go";
 import { MdPublic, MdLock } from "react-icons/md"; 
+import { useNavigate } from "react-router-dom";
+
 
 function Home() {
+  const navigate = useNavigate()
   const [modalOpen, setModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [color, setColor] = useState("#000");
@@ -108,6 +111,7 @@ function Home() {
       <div className="flex flex-wrap gap-4 p-6">
         {boards.map((board, index) => (
           <div
+          onClick={() => navigate("/detailes")}
             key={index}
             className="cursor-pointer hover:opacity-0.8 w-[270px] h-[140px] border-2 border-gray-300 rounded-lg shadow-lg p-4 flex flex-col items-start transition-transform duration-300 transform hover:scale-105"
             style={{ backgroundColor: board.color }}
@@ -138,3 +142,7 @@ function Home() {
 }
 
 export default Home;
+
+
+
+

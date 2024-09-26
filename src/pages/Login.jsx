@@ -3,7 +3,7 @@ import logo2 from "../assets/img/manago.jpg";
 import React, { useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Make sure axios is imported
+import axios from "axios";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -17,14 +17,12 @@ const Login = () => {
         const newErrors = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        // Validate email
         if (!emailRef.current.value) {
             newErrors.email = "Email is required";
         } else if (!emailRegex.test(emailRef.current.value)) {
             newErrors.email = "Invalid email address";
         }
 
-        // Validate password
         if (!passwordRef.current.value) {
             newErrors.password = "Password is required";
         } else if (passwordRef.current.value.length < 6) {
@@ -35,8 +33,7 @@ const Login = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
+        e.preventDefault()
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -55,14 +52,18 @@ const Login = () => {
                 },
             });
             console.log("Login successful:", response.data);
-            navigate("/"); 
+            
+            const token = response.data.token;
+            localStorage.setItem("token", token);
+            navigate("/");
         } catch (error) {
             console.error("Error during login:", error);
-            if (error.response) {
+
+            if (error.response && error.response.status === 400) {
+                setErrors({ api: "Incorrect email or password" });
+            } else if (error.response) {
                 const apiErrors = error.response.data.errors || {};
-                setErrors(apiErrors); // Set API errors to state
-            } else if (error) {
-                setErrors({ api: "No response from the server. Please try again." });
+                setErrors(apiErrors); // Set any additional API errors to state
             } else {
                 setErrors({ api: "An error occurred during login." });
             }

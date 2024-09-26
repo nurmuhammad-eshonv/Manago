@@ -1,212 +1,400 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import {
+  FaTimes,
+  FaUser,
+  FaTags,
+  FaListAlt,
+  FaCalendarAlt,
+  FaPaperclip,
+  FaImage,
+  FaEdit,
+  FaTrash,
+} from "react-icons/fa";
 
 const TrelloLikeBoard = () => {
   const [boards, setBoards] = useState([
     {
       id: 1,
-      name: 'My Board',
-      color: '#8E24AA',
+      name: "Mening Ajoyib Doskam",
+      color: "#8E24AA",
       lists: [
-        { id: 1, title: 'todo', cards: [{ id: 1, title: 'DSA' }] },
-        { id: 2, title: 'in progress', cards: [{ id:2, title: 'DSA' }] },
-        { id: 3, title: 'testing', cards: [{ id: 3, title: 'DSA' }] },
-        { id: 4, title: 'done', cards: [{ id: 4, title: 'DSA' }] },
-      ]
+        {
+          id: 1,
+          title: "Bajarish kerak",
+          cards: [
+            {
+              id: 1,
+              title: "Reactni o'rganish",
+              description: "React asoslari va hooklarini o'rganish",
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: "Jarayonda",
+          cards: [
+            {
+              id: 2,
+              title: "Trello klonini yaratish",
+              description: "React yordamida Trello-ga o'xshash dastur yaratish",
+            },
+          ],
+        },
+        {
+          id: 3,
+          title: "Testlash",
+          cards: [
+            {
+              id: 3,
+              title: "Yangi funksiyalarni testlash",
+              description: "Barcha yangi funksiyalarni ishga tushirishdan oldin sinchiklab tekshirish",
+            },
+          ],
+        },
+        {
+          id: 4,
+          title: "Bajarildi",
+          cards: [
+            {
+              id: 4,
+              title: "Loyihani sozlash",
+              description: "React loyihasini ishga tushirish va kerakli paketlarni o'rnatish",
+            },
+          ],
+        },
+      ],
     },
-    
   ]);
 
-  const addList = (boardId) => {
-    setBoards(boards.map(board => {
-      if (board.id === boardId) {
-        const newList = { id: Date.now(), title: '', isEditing: true, cards: [] };
-        return { ...board, lists: [...board.lists, newList] };
-      }
-      return board;
-    }));
-  };
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [editingListId, setEditingListId] = useState(null);
 
-  const updateListTitle = (boardId, listId, newTitle) => {
-    setBoards(boards.map(board => {
-      if (board.id === boardId) {
-        return {
-          ...board,
-          lists: board.lists.map(list => {
-            if (list.id === listId) {
-              return { ...list, title: newTitle, isEditing: false };
-            }
-            return list;
-          })
-        };
-      }
-      return board;
-    }));
+  const openCardModal = (card, listTitle) => {
+    setSelectedCard({ ...card, listTitle });
+    document.getElementById("cardModal").showModal();
   };
 
   const addCard = (boardId, listId) => {
-    setBoards(boards.map(board => {
-      if (board.id === boardId) {
-        return {
-          ...board,
-          lists: board.lists.map(list => {
-            if (list.id === listId) {
-              
-              const newCard = { id: Date.now(), title: '', isEditing: true };
-              return { ...list, cards: [...list.cards, newCard] };
-            }
-            return list;
-          })
-        };
-      }
-      return board;
-    }));
+    const cardName = prompt("Karta nomini kiriting:");
+    if (cardName) {
+      setBoards(
+        boards.map((board) => {
+          if (board.id === boardId) {
+            return {
+              ...board,
+              lists: board.lists.map((list) => {
+                if (list.id === listId) {
+                  const newCard = {
+                    id: Date.now(),
+                    title: cardName,
+                    description: "",
+                  };
+                  return { ...list, cards: [...list.cards, newCard] };
+                }
+                return list;
+              }),
+            };
+          }
+          return board;
+        })
+      );
+      toast.success("Karta muvaffaqiyatli qo'shildi!");
+    }
   };
 
   const updateCardTitle = (boardId, listId, cardId, newTitle) => {
-    setBoards(boards.map(board => {
-      if (board.id === boardId) {
-        return {
-          ...board,
-          lists: board.lists.map(list => {
-            if (list.id === listId) {
-              return {
-                ...list,
-                cards: list.cards.map(card => {
-                  if (card.id === cardId) {
-                    return { ...card, title: newTitle, isEditing: false };
-                  }
-                  return card;
-                })
-              };
-            }
-            return list;
-          })
-        };
-      }
-      return board;
-    }));
+    setBoards(
+      boards.map((board) => {
+        if (board.id === boardId) {
+          return {
+            ...board,
+            lists: board.lists.map((list) => {
+              if (list.id === listId) {
+                return {
+                  ...list,
+                  cards: list.cards.map((card) => {
+                    if (card.id === cardId) {
+                      return { ...card, title: newTitle };
+                    }
+                    return card;
+                  }),
+                };
+              }
+              return list;
+            }),
+          };
+        }
+        return board;
+      })
+    );
   };
 
-  const handleListSubmit = (boardId, listId, title) => {
-    if (!title.trim()) {
-      alert('List title cannot be empty.');
-      return;
-    }
-    updateListTitle(boardId, listId, title);
+  const updateCardDescription = (boardId, listId, cardId, newDescription) => {
+    setBoards(
+      boards.map((board) => {
+        if (board.id === boardId) {
+          return {
+            ...board,
+            lists: board.lists.map((list) => {
+              if (list.id === listId) {
+                return {
+                  ...list,
+                  cards: list.cards.map((card) => {
+                    if (card.id === cardId) {
+                      return { ...card, description: newDescription };
+                    }
+                    return card;
+                  }),
+                };
+              }
+              return list;
+            }),
+          };
+        }
+        return board;
+      })
+    );
+    setSelectedCard({ ...selectedCard, description: newDescription });
+    toast.success("Tavsif muvaffaqiyatli yangilandi!");
   };
 
-  const handleCardSubmit = (boardId, listId, cardId, title) => {
-    if (!title.trim()) {
-      alert('Card title cannot be empty.');
+  const deleteCard = (boardId, listId, cardId) => {
+    setBoards(
+      boards.map((board) => {
+        if (board.id === boardId) {
+          return {
+            ...board,
+            lists: board.lists.map((list) => {
+              if (list.id === listId) {
+                return {
+                  ...list,
+                  cards: list.cards.filter((card) => card.id !== cardId),
+                };
+              }
+              return list;
+            }),
+          };
+        }
+        return board;
+      })
+    );
+    toast.success("Karta muvaffaqiyatli o'chirildi!");
+  };
+
+  const startEditingList = (listId) => {
+    setEditingListId(listId);
+  };
+
+  const updateListTitle = (boardId, listId, newTitle) => {
+    if (!newTitle.trim()) {
+      toast.error("Ro'yxat sarlavhasi bo'sh bo'lishi mumkin emas");
       return;
     }
-    updateCardTitle(boardId, listId, cardId, title);
+    setBoards(
+      boards.map((board) => {
+        if (board.id === boardId) {
+          return {
+            ...board,
+            lists: board.lists.map((list) => {
+              if (list.id === listId) {
+                return { ...list, title: newTitle };
+              }
+              return list;
+            }),
+          };
+        }
+        return board;
+      })
+    );
+    setEditingListId(null);
+    toast.success("Ro'yxat sarlavhasi yangilandi!");
   };
 
   return (
-    <div className="font-sans  text-white">
-      {boards.map(board => (
-        <div key={board.id} className="rounded p-2 overflow-x-auto">
-          <div className=" flex gap-5 flex-wrap">
-            {board.lists.map(list => (
-              <div key={list.id} className=" bg-gray-800 rounded p-2">
-                {list.isEditing ? (
-                  <div className="flex">
-                    <input
-                      type="text"
-                      value={list.title}
-                      onChange={(e) => {
-                        const updatedBoards = boards.map(b => {
-                          if (b.id === board.id) {
-                            return {
-                              ...b,
-                              lists: b.lists.map(l => {
-                                if (l.id === list.id) {
-                                  return { ...l, title: e.target.value };
-                                }
-                                return l;
-                              })
-                            };
-                          }
-                          return b;
-                        });
-                        setBoards(updatedBoards);
-                      }}
-                      className="w-full p-1 bg-transparent text-white border-none mb-2"
-                      placeholder="Enter list title"
-                    />
-                    <button
-                      onClick={() => handleListSubmit(board.id, list.id, list.title)}
-                      className="bg-blue-500 text-white rounded px-1 py-0.5 ml-2 text-xs"
-                    >
-                      Submit
-                    </button>
-                  </div>
+    <div className="font-sans text-white bg-gradient-to-r from-blue-900 to-purple-900 min-h-screen p-6">
+      <Toaster position="top-center" reverseOrder={false} />
+      <h1 className="text-4xl font-bold mb-4 text-center text-white">
+        Mening Ajoyib Trello Doskam
+      </h1>
+      {boards.map((board) => (
+        <div key={board.id} className="rounded-lg p-4 overflow-x-auto">
+          <div className="flex gap-6 flex-wrap">
+            {board.lists.map((list) => (
+              <div
+                key={list.id}
+                className="bg-gray-800 rounded-lg p-4 min-w-[300px] shadow-lg"
+              >
+                {editingListId === list.id ? (
+                  <input
+                    type="text"
+                    className="w-full p-2 mb-2 bg-gray-700 rounded text-white"
+                    defaultValue={list.title}
+                    onBlur={(e) =>
+                      updateListTitle(board.id, list.id, e.target.value)
+                    }
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        updateListTitle(board.id, list.id, e.target.value);
+                      }
+                    }}
+                    autoFocus
+                  />
                 ) : (
-                  <h3 className="mb-2 text-sm font-bold">{list.title}</h3>
+                  <h3 className="mb-4 text-lg font-bold flex justify-between items-center">
+                    {list.title}
+                    <button
+                      onClick={() => startEditingList(list.id)}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      <FaEdit />
+                    </button>
+                  </h3>
                 )}
-                <div className="flex flex-col gap-2">
-                  {list.cards.map(card => (
-                    <div key={card.id} className=" w-[300px] bg-gray-700 rounded p-2">
-                      {card.isEditing ? (
-                        <div className="flex">
-                          <input
-                            type="text"
-                            value={card.title}
-                            onChange={(e) => {
-                              const updatedBoards = boards.map(b => {
-                                if (b.id === board.id) {
-                                  return {
-                                    ...b,
-                                    lists: b.lists.map(l => {
-                                      if (l.id === list.id) {
-                                        return {
-                                          ...l,
-                                          cards: l.cards.map(c => {
-                                            if (c.id === card.id) {
-                                              return { ...c, title: e.target.value };
-                                            }
-                                            return c;
-                                          })
-                                        };
-                                      }
-                                      return l;
-                                    })
-                                  };
-                                }
-                                return b;
-                              });
-                              setBoards(updatedBoards);
-                            }}
-                            className="w-full p-1 bg-transparent text-white border-none"
-                            placeholder="Enter card title"
-                          />
-                          <button
-                            onClick={() => handleCardSubmit(board.id, list.id, card.id, card.title)}
-                            className="bg-blue-500 text-white rounded px-1 py-0.5 ml-2 text-xs"
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      ) : (
-                        <span>{card.title}</span>
-                      )}
+                <div className="space-y-3">
+                  {list.cards.map((card) => (
+                    <div
+                      key={card.id}
+                      onClick={() => openCardModal(card, list.title)}
+                      className="cursor-pointer bg-gray-700 rounded-lg p-3 hover:bg-gray-600 transition duration-200"
+                    >
+                      <h4 className="font-semibold mb-1">{card.title}</h4>
+                      <p className="text-sm text-gray-400 truncate">
+                        {card.description}
+                      </p>
                     </div>
                   ))}
                   <button
                     onClick={() => addCard(board.id, list.id)}
-                    className="bg-transparent border-none text-gray-400 cursor-pointer text-left p-1 text-sm"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-2 transition duration-200"
                   >
-                    + Add a card
+                    + add task
                   </button>
                 </div>
               </div>
             ))}
-            <div className="min-w-[272px]">
-            </div>
           </div>
         </div>
       ))}
+
+      {selectedCard && (
+        <dialog id="cardModal" className="modal">
+          <div className="modal-box w-11/12 max-w-3xl bg-gray-800 text-white">
+            <form method="dialog">
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                <FaTimes className="text-gray-400 hover:text-white" />
+              </button>
+            </form>
+
+            <div className="mb-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold">{selectedCard.title}</h2>
+                <div className="flex space-x-2">
+                  <button
+                    className="btn btn-sm btn-info"
+                    onClick={() => {
+                      const newTitle = prompt("Yangi karta sarlavhasini kiriting:", selectedCard.title);
+                      if (newTitle) {
+                        updateCardTitle(boards[0].id, boards[0].lists.find(list => list.title === selectedCard.listTitle).id, selectedCard.id, newTitle);
+                        setSelectedCard({ ...selectedCard, title: newTitle });
+                        toast.success("Karta sarlavhasi yangilandi!");
+                      }
+                    }}
+                  >
+                    <FaEdit /> Tahrirlash
+                  </button>
+                  <button
+                    className="btn btn-sm btn-error"
+                    onClick={() => {
+                      deleteCard(
+                        boards[0].id,
+                        boards[0].lists.find(
+                          (list) => list.title === selectedCard.listTitle
+                        ).id,
+                        selectedCard.id
+                      );
+                      document.getElementById("cardModal").close();
+                    }}
+                  >
+                    <FaTrash /> O'chirish
+                  </button>
+                </div>
+              </div>
+              <p className="text-sm text-gray-400">
+                ro'yxatda{" "}
+                <span className="font-bold">{selectedCard.listTitle}</span>
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Tavsif</h3>
+              <textarea
+                className="w-full h-32 p-3 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={selectedCard.description}
+                onChange={(e) => setSelectedCard({ ...selectedCard, description: e.target.value })}
+              ></textarea>
+              <div className="flex mt-2 space-x-2">
+                <button 
+                  className="btn btn-sm btn-primary"
+                  onClick={() => updateCardDescription(
+                    boards[0].id,
+                    boards[0].lists.find(list => list.title === selectedCard.listTitle).id,
+                    selectedCard.id,
+                    selectedCard.description
+                  )}
+                >
+                  Saqlash
+                </button>
+                <button 
+                  className="btn btn-sm btn-ghost"
+                  onClick={() => setSelectedCard({ ...selectedCard, description: selectedCard.description })}
+                >
+                  Bekor qilish
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Faoliyat</h3>
+              <div className="text-gray-400">
+                <div className="flex items-start space-x-2 mt-2">
+                  <span className="font-semibold">John Doe</span>
+                  <p>ushbu kartani {selectedCard.listTitle} ro'yxatiga qo'shdi</p>
+                </div>
+                <p className="text-xs text-gray-500">21 Sent 2024, 18:05</p>
+              </div>
+              <div className="mt-4">
+                <textarea
+                  className="w-full h-20 p-3 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Izoh yozing..."
+                ></textarea>
+                <button className="btn btn-sm btn-primary mt-2">
+                  Izoh qo'shish
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { text: "A'zolar", icon: <FaUser /> },
+                { text: "Yorliqlar", icon: <FaTags /> },
+                { text: "Tekshirish ro'yxati", icon: <FaListAlt /> },
+                { text: "Muddat", icon: <FaCalendarAlt /> },
+                { text: "Biriktirma", icon: <FaPaperclip /> },
+                { text: "Muqova", icon: <FaImage /> },
+              ].map((action, idx) => (
+                <button
+                  key={idx}
+                  className="btn btn-outline btn-info flex items-center justify-between px-4 py-2"
+                >
+                  <span>{action.text}</span>
+                  {action.icon}
+                </button>
+              ))}
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 };
