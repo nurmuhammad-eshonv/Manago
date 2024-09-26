@@ -49,7 +49,7 @@ const Login = () => {
         };
 
         try {
-            const response = await axios.post("https://trello.vimlc.uz:8000/api/auth/login", loginData, {
+            const response = await axios.post("https://trello.vimlc.uz/api/auth/login", loginData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
