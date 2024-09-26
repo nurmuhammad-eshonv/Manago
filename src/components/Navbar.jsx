@@ -10,11 +10,13 @@ import Vector from "../assets/Vector.svg";
 import { CiSettings } from "react-icons/ci";
 
 function Navbar() {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext)
+
+
 
   return (
     <div
-      className={`pt-5 pl-3 pr-3 h-screen flex flex-col gap-[151px] ${
+      className={`pt-5 pl-3 pr-3 h-screen flex flex-col gap-[151px]  ${
         theme === "dark" ? "bg-[#1E1E2A]" : "bg-[#FBFAFF]"
       }`}
     >
@@ -57,7 +59,7 @@ function Navbar() {
               isActive
                 ? theme === "dark"
                   ? "bg-gray-700 rounded p-1"
-                  : "bg-gray-200 rounded p-1"
+                  : "bg-gray-200 rounded p-1" 
                 : ""
             }`
           }

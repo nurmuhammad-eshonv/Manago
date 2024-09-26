@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Detailes from "./pages/Detailes";
@@ -14,6 +15,12 @@ import Dosc from "./pages/Dosc";
 import Cart from "./pages/Cart"
 
 function App() {
+  const [isAuth, setIsAuth] = useState(localStorage.getItem("token"))
+
+  if(isAuth){
+      
+  }
+
   return (
     <ThemeProvider>
       <Routes>

@@ -75,7 +75,7 @@ const Register = () => {
     };
 
     try {
-      const response = await axios.post("http://trello.vimlc.uz:8000/api/auth/register", formData, {
+      const response = await axios.post("https://trello.vimlc.uz/api/auth/register", formData, {
         headers: {
           "Content-Type": "application/json", 
         },
