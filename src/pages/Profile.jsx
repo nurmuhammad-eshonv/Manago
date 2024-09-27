@@ -1,248 +1,112 @@
-import React, { useState, useEffect, useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext"; // ThemeContextni import qilish
-import profileImg from "../assets/img/profileImage.png";
 
-function Profile() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    role: "",
+import React, { useState, useEffect } from 'react';
+
+const AdvancedProfile = () => {
+  const [userData, setUserData] = useState({
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    role: 'Software Engineer',
   });
-
-  const [errors, setErrors] = useState({});
-  const [isEditMode, setIsEditMode] = useState(true);
-
-  // Tema kontekstini olish
-  const { theme } = useContext(ThemeContext);
-
-  useEffect(() => {
-    const storedData = localStorage.getItem("formData");
-    if (storedData) {
-      setFormData(JSON.parse(storedData));
-      setIsEditMode(false);
-    }
-  }, []);
-
-  const validate = () => {
-    const newErrors = {};
-
-    if (!formData.firstName) {
-      newErrors.firstName = "First name is required";
-    } else if (formData.firstName.length < 2) {
-      newErrors.firstName = "First name must be at least 2 characters long";
-    }
-
-    if (!formData.lastName) {
-      newErrors.lastName = "Last name is required";
-    } else if (formData.lastName.length < 2) {
-      newErrors.lastName = "Last name must be at least 2 characters long";
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!emailPattern.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-
-    if (!formData.role) {
-      newErrors.role = "Role is required";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState('profile');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
-      localStorage.setItem("formData", JSON.stringify(formData));
-      setIsEditMode(false);
-    }
-  };
-
-  const handleCancel = () => {
-    setIsEditMode(true);
+    setIsEditing(false);
   };
 
   return (
-    <div className=" pl-[j0px] min-h-screen flex flex-col items-center container mx-auto overflow-y-auto">
-      <div
-        className={` flex flex-col items-center container ${
-          theme === "dark" ? "" : "bg-white"
-        }`}
-      >
-        <div className="w-full h-[200px] bg-gradient-to-r from-blue-400 to-purple-500 relative">
-          <img
-            className="w-[157px] h-[157px] rounded-full border-4 border-white absolute left-[30px] top-[130px]"
-            src={profileImg}
-            alt="Profile"
-          />
-        </div>
-
-        <div
-          className={` w-full max-w-[1400px] p-8 shadow-lg rounded-lg ${
-            theme === "dark" ? " text-white" : "bg-white text-black"
-          }`}
-        >
-          <h2 className="text-4xl font-bold mb-14 -mt-4 ml-[200px]">Settings</h2>
-
-          <div className="flex space-x-4 mb-4">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">
-              Profile
-            </button>
-            <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">
-              Password
-            </button>
-            <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">
-              Team
-            </button>
-            <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">
-              Plan
-            </button>
-            <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">
-              Billing
-            </button>
-            <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">
-              Email
-            </button>
-            <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">
-              Notifications
-            </button>
-          </div>
-          {/* Form yoki ko'rinish */}
-          {isEditMode ? (
-            <form className="space-y-6 " onSubmit={handleSubmit}>
-              <div className="flex gap-3">
-                <div className="w-1/2">
-                  <label className="block text-gray-600">First name</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className={`w-full p-2 border ${
-                      errors.firstName ? "border-red-500" : "border-gray-300"
-                    } rounded-lg dark:bg-transparent`}
-                    placeholder="Killian"
-                  />
-                  {errors.firstName && (
-                    <p className="text-red-500 text-sm">{errors.firstName}</p>
-                  )}
-                </div>
-                <div className="w-1/2 ">
-                  <label className="block text-gray-600 mr-3">Last name</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className={`w-full p-2 border ${
-                      errors.lastName ? "border-red-500" : "border-gray-300"
-                    } rounded-lg dark:bg-transparent`}
-                    placeholder="James"
-                  />
-                  {errors.lastName && (
-                    <p className="text-red-500 text-sm">{errors.lastName}</p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-gray-600">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`w-full p-2 border dark:bg-transparent ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  } rounded-lg`}
-                  placeholder="email@example.com"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-gray-600">Role</label>
-                <input
-                  type="text"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className={`w-full p-2 border dark:bg-transparent ${
-                    errors.role ? "border-red-500" : "border-gray-300"
-                  } rounded-lg`}
-                  placeholder="Admin"
-                />
-                {errors.role && (
-                  <p className="text-red-500 text-sm">{errors.role}</p>
-                )}
-              </div>
-
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="space-y-6 p-4 border border-gray-200 rounded-lg bg-gray-50 dark: bg-transparent">
-              <div>
-                <h3 className="text-lg font-semibold">First Name</h3>
-                <p className="">{formData.firstName}</p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold">Last Name</h3>
-                <p>{formData.lastName}</p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold">Email</h3>
-                <p>{formData.email}</p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold">Role</h3>
-                <p>{formData.role}</p>
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setIsEditMode(true)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                >
-                  Edit
-                </button>
-              </div>
+    <div className="bg-transparent mt-4 flex items-center justify-center p-4">
+      <div className="w-full max-w-7xl bg-opacity-10 backdrop-filter backdrop-blur-lg  shadow-2xl overflow-hidden">
+        <div className="md:flex">
+          {/* Sidebar */}
+          <div className="md:w-1/3 bg-gradient-to-b rounded-[20px] from-white to-dark p-8">
+            <div className="text-center">
+              <img
+                src="https://i.pravatar.cc/150?img=11"
+                alt="Profile"
+                className="w-32 h-32 rounded-full border-4 border-white shadow-lg mx-auto mb-4 transform hover:scale-105 transition-transform duration-300"
+              />
+              <h2 className="text-2xl font-bold text-white mb-2">{`${userData.firstName} ${userData.lastName}`}</h2>
+              <p className="text-blue-200 mb-6">{userData.role}</p>
             </div>
-          )}
+            <nav>
+              {['Profile', 'Portfolio', 'Messages', 'Settings'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => setActiveTab(item.toLowerCase())}
+                  className={`w-full text-left py-2 px-4 rounded mb-2 transition-colors duration-300 ${
+                    activeTab === item.toLowerCase()
+                      ? 'bg-white bg-opacity-20 text-white'
+                      : 'text-blue-200 hover:bg-white hover:bg-opacity-10'
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          {/* Main Content */}
+          <div className="md:w-2/3 p-8">
+            <h1 className="text-4xl font-bold text-white mb-8">My Profile</h1>
+            {!isEditing ? (
+              <div className="space-y-6 animate-fade-in">
+                {Object.entries(userData).map(([key, value]) => (
+                  <div key={key} className="group">
+                    <label className="block text-blue-300 text-sm font-semibold mb-2">
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </label>
+                    <p className="text-white text-lg pb-2 border-b-2 border-blue-400 group-hover:border-pink-400 transition-colors duration-300">
+                      {value}
+                    </p>
+                  </div>
+                ))}
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="mt-6 px-6 py-3 bg-green-700  text-white rounded-full font-semibold text-lg shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all duration-300"
+                >
+                  Edit Profile
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
+                {Object.entries(userData).map(([key, value]) => (
+                  <div key={key}>
+                    <label className="block text-blue-300 text-sm font-semibold mb-2">
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </label>
+                    <input
+                      type="text"
+                      value={value}
+                      onChange={(e) => setUserData({ ...userData, [key]: e.target.value })}
+                      className="w-full bg-white bg-opacity-20 text-white border-0 rounded-lg p-3 focus:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all duration-300"
+                    />
+                  </div>
+                ))}
+                <div className="flex space-x-4">
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-green-500 text-white rounded-full font-semibold text-lg shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-300"
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(false)}
+                    className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold text-lg shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all duration-300"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Profile;
+export default AdvancedProfile;

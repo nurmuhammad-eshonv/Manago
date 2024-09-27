@@ -16,14 +16,14 @@ function Navbar() {
 
   return (
     <div
-      className={`pt-5 pl-3 pr-3 h-screen flex flex-col gap-[151px]  ${
+      className={`pt-5 pl-3 pr-3 h-screen flex flex-col gap-[151px] fixed left-0 top-0 z-50 w-[80px] ${
         theme === "dark" ? "bg-[#1E1E2A]" : "bg-[#FBFAFF]"
       }`}
     >
       <NavLink to="/">
         <img src={Logo} alt="Logo icon" className="w-16 h-[61px]" />
       </NavLink>
-      <div className="flex flex-col gap-[49px] items-center">
+      <div className="flex flex-col gap-[49px] items-center ">
         <NavLink
           to="/"
           className={({ isActive }) =>

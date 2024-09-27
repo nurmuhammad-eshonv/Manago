@@ -1,13 +1,17 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
+import { div } from "framer-motion/client";
 
 function Header() {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
+    <div className={` ${
+        theme === "dark" ? "bg-[#10141E]" : "bg-[#FFFFFF]"
+      } `}>
     <header
-      className={`h-[76px] pt-4 pb-4 flex items-center pr-10 ${
+      className={`h-[76px] pt-4 pb-4 flex items-center pr-10${
         theme === "dark" ? "bg-[#10141E]" : "bg-[#FFFFFF]"
       }`}
     >
@@ -112,6 +116,7 @@ function Header() {
         </Link>
       </div>
     </header>
+    </div>
   );
 }
 
