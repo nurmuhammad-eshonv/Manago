@@ -12,7 +12,7 @@ import {
   FaTrash,
 } from "react-icons/fa";
 
-const TrelloLikeBoard = () => {
+const Details = () => {
   const [boards, setBoards] = useState([
     {
       id: 1,
@@ -212,13 +212,13 @@ const TrelloLikeBoard = () => {
   };
 
   return (
-    <div className="font-sans text-white bg-gradient-to-r from-blue-900 to-purple-900 min-h-screen p-6">
+    <div className="font-sans text-white bg-gradient-to-r from-blue-900 to-purple-900 min-h-screen p-6 ml-[80px]">
       <Toaster position="top-center" reverseOrder={false} />
       <h1 className="text-4xl font-bold mb-4 text-center text-white">
         Mening Ajoyib Trello Doskam
       </h1>
       {boards.map((board) => (
-        <div key={board.id} className="rounded-lg p-4 overflow-x-auto">
+        <div key={board.id} className="rounded-lg p-4 overflow-x-auto ">
           <div className="flex gap-6 flex-wrap">
             {board.lists.map((list) => (
               <div
@@ -279,10 +279,10 @@ const TrelloLikeBoard = () => {
 
       {selectedCard && (
         <dialog id="cardModal" className="modal">
-          <div className="modal-box w-11/12 max-w-3xl bg-gray-800 text-white">
+          <div className="modal-box w-12/12 max-w-3xl bg-gray-800 text-white">
             <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                <FaTimes className="text-gray-400 hover:text-white" />
+              <button className=" mb-2 btn btn-sm btn-circle btn-primary text-white ml-[680px] -mt-[1100px]">
+                <FaTimes className="" />
               </button>
             </form>
 
@@ -399,4 +399,6 @@ const TrelloLikeBoard = () => {
   );
 };
 
-export default TrelloLikeBoard;
+export default Details;
+
+
