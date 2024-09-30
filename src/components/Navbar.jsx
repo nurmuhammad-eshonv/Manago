@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router-dom"; // Link o'rniga NavLink foydalanamiz
+import { NavLink } from "react-router-dom"; 
 import { ThemeContext } from "../context/ThemeContext";
 import Logo from "../assets/Logo.svg";
 import Book from "../assets/Book.svg";
@@ -30,8 +30,8 @@ function Navbar() {
             `flex flex-col items-center transition duration-200 hover:scale-110 active:scale-95 ${
               isActive
                 ? theme === "dark"
-                  ? "bg-gray-700 rounded p-1"
-                  : "bg-gray-200 rounded p-1"
+                  ? "bg-[#5051F9] rounded p-2"
+                  : "bg-[#5051F9] rounded p-2"
                 : ""
             }`
           }
@@ -44,8 +44,8 @@ function Navbar() {
             `flex flex-col items-center transition duration-200 hover:scale-110 active:scale-95 ${
               isActive
                 ? theme === "dark"
-                  ? "bg-gray-700 rounded p-1"
-                  : "bg-gray-200 rounded p-1"
+                  ? "bg-[#5051F9] rounded p-2"
+                  : "bg-[#5051F9] rounded p-2"
                 : ""
             }`
           }
@@ -58,8 +58,8 @@ function Navbar() {
             `flex flex-col items-center transition duration-200 hover:scale-110 active:scale-95 ${
               isActive
                 ? theme === "dark"
-                  ? "bg-gray-700 rounded p-1"
-                  : "bg-gray-200 rounded p-1" 
+                  ? "bg-[#5051F9] rounded p-2"
+                  : "bg-[#5051F9] rounded p-2" 
                 : ""
             }`
           }
@@ -72,8 +72,8 @@ function Navbar() {
             `flex flex-col items-center transition duration-200 hover:scale-110 active:scale-95 ${
               isActive
                 ? theme === "dark"
-                  ? "bg-gray-700 rounded p-1"
-                  : "bg-gray-200 rounded p-1"
+                  ? "bg-[#5051F9] rounded p-2"
+                  : "bg-[#5051F9] rounded p-2"
                 : ""
             }`
           }
@@ -86,8 +86,8 @@ function Navbar() {
             `flex flex-col items-center transition duration-200 hover:scale-110 active:scale-95 ${
               isActive
                 ? theme === "dark"
-                  ? "bg-gray-700 rounded p-1"
-                  : "bg-gray-200 rounded p-1"
+                  ? "bg-[#5051F9] rounded p-2"
+                  : "bg-[#5051F9] rounded p-2"
                 : ""
             }`
           }
@@ -100,8 +100,8 @@ function Navbar() {
             `flex flex-col items-center transition duration-200 hover:scale-110 active:scale-95 ${
               isActive
                 ? theme === "dark"
-                  ? "bg-gray-700 rounded p-1"
-                  : "bg-gray-200 rounded p-1"
+                  ? "bg-[#5051F9] rounded p-2"
+                  : "bg-[#5051F9] rounded p-2"
                 : ""
             }`
           }
