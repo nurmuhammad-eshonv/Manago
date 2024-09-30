@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PiUploadSimple } from "react-icons/pi";
 import { GoFileDirectory } from "react-icons/go";
+import { MdPublic, MdLock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "../axios/interceptor";
 
@@ -11,6 +12,8 @@ function Home() {
   const [color, setColor] = useState("gray"); // Default to gray
   const [description, setDescription] = useState("");
   const [boards, setBoards] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  console.log(token);
 
   // Fetch boards from the API on component mount
   useEffect(() => {

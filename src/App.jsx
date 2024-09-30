@@ -1,6 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Detailes from "./pages/Detailes";
@@ -12,80 +11,119 @@ import Folder from "./pages/Folder";
 import Message from "./pages/Message";
 import Errorpages from "./pages/Errorpages";
 import Dosc from "./pages/Dosc";
-import Cart from "./pages/Cart"
+import Cart from "./pages/Cart";
 
 function App() {
-  const [isAuth, setIsAuth] = useState(localStorage.getItem("token"))
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  if(isAuth){
-      
-  }
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setToken(localStorage.getItem("token"));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   return (
     <ThemeProvider>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register />} />
         <Route
           path="/"
           element={
-            <MainLoyaut>
-              <Home />
-            </MainLoyaut>
+            token ? (
+              <MainLoyaut>
+                <Home />
+              </MainLoyaut>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
+
         <Route
           path="/profile"
           element={
-            <MainLoyaut>
-              <Profile />
-            </MainLoyaut>
+            token ? (
+              <MainLoyaut>
+                <Profile />
+              </MainLoyaut>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
 
         <Route
           path="/cart"
           element={
-            <MainLoyaut>
-              <Cart />
-            </MainLoyaut>
+            token ? (
+              <MainLoyaut>
+                <Cart />
+              </MainLoyaut>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
+
         <Route
           path="/detailes"
           element={
-            <MainLoyaut>
-              <Detailes />
-            </MainLoyaut>
+            token ? (
+              <MainLoyaut>
+                <Detailes />
+              </MainLoyaut>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
 
         <Route
           path="/dosc"
           element={
-            <MainLoyaut>
-              <Dosc />
-            </MainLoyaut>
+            token ? (
+              <MainLoyaut>
+                <Dosc />
+              </MainLoyaut>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
 
         <Route
           path="/folders"
           element={
-            <MainLoyaut>
-              <Folder />
-            </MainLoyaut>
+            token ? (
+              <MainLoyaut>
+                <Folder />
+              </MainLoyaut>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
 
         <Route
           path="/message"
           element={
-            <MainLoyaut>
-              <Message />
-            </MainLoyaut>
+            token ? (
+              <MainLoyaut>
+                <Message />
+              </MainLoyaut>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
+
         <Route
           path="*"
           element={
