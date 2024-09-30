@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
-import { div } from "framer-motion/client";
 
 function Header() {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -92,23 +91,21 @@ function Header() {
             </div>
           </Link>
 
-          <Link to="/profile">
-            <div className="avatar-group -space-x-6 rtl:space-x-reverse">
-              <div className="avatar">
-                <div className="w-12">
-                  <img
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                    alt="User"
-                  />
-                </div>
-              </div>
-              <div className="avatar placeholder w-8 h-8">
-                <div className="bg-neutral text-neutral-content">
-                  <span>+1</span>
-                </div>
+          <div className="avatar-group -space-x-6 rtl:space-x-reverse">
+            <div className="avatar">
+              <div className="w-12">
+                <img
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  alt="User"
+                />
               </div>
             </div>
-          </Link>
+            <div className="avatar placeholder w-8 h-8">
+              <div className="bg-neutral text-neutral-content">
+                <span>+1</span>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
     </div>
