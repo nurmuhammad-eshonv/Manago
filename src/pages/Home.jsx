@@ -9,42 +9,51 @@ function Home() {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [color, setColor] = useState("#000");
+  const [color, setColor] = useState("gray"); // Default to gray
   const [description, setDescription] = useState("");
   const [boards, setBoards] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token"));
   console.log(token);
 
+  // Fetch boards from the API on component mount
   useEffect(() => {
-    const storedBoards = localStorage.getItem("boards");
-    if (storedBoards) {
-      setBoards(JSON.parse(storedBoards));
-    }
-  }, []);
+    const fetchBoards = async () => {
+      try {
+        const response = await axios.get("/boards/my-boards");
+        setBoards(response.data.boards); // Assuming the data structure has a boards array
+      } catch (error) {
+        console.error("Error fetching boards:", error.response ? error.response.data : error.message);
+      }
+    };
+    fetchBoards();
+  }, []); // Empty dependency array to run only once on mount
 
-  useEffect(() => {
-    localStorage.setItem("boards", JSON.stringify(boards));
-  }, [boards]);
-
-  const handleCreateBoard = () => {
-    const newBoard = { title, color, description };
-    setBoards([...boards, newBoard]);
-
+  const resetForm = () => {
     setTitle("");
-    setColor("#ffffff");
+    setColor("gray");
     setDescription("");
-
     setModalOpen(false);
   };
 
-  axios
-    .post("/boards/create", boards)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  const handleCreateBoard = () => {
+    const newBoard = { name: title, description, color };
+
+    console.log("Creating board with data:", newBoard);
+
+    axios
+      .post("/boards/create", newBoard)
+      .then((res) => {
+        console.log("Board successfully created:", res.data);
+        setBoards([...boards, newBoard]); // Update state with new board
+        resetForm(); // Reset form after creation
+      })
+      .catch((err) => {
+        console.error(
+          "Error creating board:",
+          err.response ? err.response.data : err.message
+        );
+      });
+  };
 
   return (
     <div className="ml-[90px]">
@@ -75,13 +84,12 @@ function Home() {
                   <label className="block mt-1">
                     Color:
                     <div className="relative">
-                      <input
-                        type="color"
-                        value={color}
-                        onChange={(e) => setColor(e.target.value)}
-                        className=" w-full cursor-pointer"
-                        style={{ height: "40px", width: "100%" }}
-                      />
+                      <select onChange={(e) => setColor(e.target.value)} className="select w-full">
+                        <option value="red" className="text-red-600 font-bold">Red</option>
+                        <option value="gray" className="text-gray-500 font-bold">Gray</option>
+                        <option value="orange" className="text-orange-600 font-bold">Orange</option>
+                        <option value="green" className="text-green-600 font-bold">Green</option>
+                      </select>
                     </div>
                   </label>
                   <label className="block mt-2">
@@ -127,7 +135,7 @@ function Home() {
             style={{ backgroundColor: board.color }}
           >
             <GoFileDirectory className="text-5xl text-white mb-2" />
-            <h4 className="font-bold text-lg text-white">{board.title}</h4>
+            <h4 className="font-bold text-lg text-white">{board.name}</h4>
             <p className="text-white">{board.description}</p>
           </div>
         ))}
