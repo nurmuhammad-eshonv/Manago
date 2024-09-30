@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import { useParams } from "react-router-dom";
 import {
   FaTimes,
   FaUser,
@@ -13,6 +14,9 @@ import {
 } from "react-icons/fa";
 
 const Details = () => {
+  const params = useParams("")
+  console.log(params.id);
+  
   const [boards, setBoards] = useState([
     {
       id: 1,
