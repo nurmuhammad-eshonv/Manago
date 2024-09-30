@@ -132,7 +132,7 @@ const Details = () => {
     );
   };
 
-const updateCardDescription = (boardId, listId, cardId, newDescription) => {
+  const updateCardDescription = (boardId, listId, cardId, newDescription) => {
     setBoards(
       boards.map((board) => {
         if (board.id === boardId) {
@@ -213,7 +213,7 @@ const updateCardDescription = (boardId, listId, cardId, newDescription) => {
     toast.success("Ro'yxat sarlavhasi yangilandi!");
   };
 
-return (
+  return (
     <div className="font-sans text-white bg-gradient-to-r from-blue-900 to-purple-900 min-h-screen p-6 ml-[80px]">
       <Toaster position="top-center" reverseOrder={false} />
       <h1 className="text-4xl font-bold mb-4 text-center text-white">
@@ -288,7 +288,7 @@ return (
               </button>
             </form>
 
-<div className="mb-6">
+            <div className="mb-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold">{selectedCard.title}</h2>
                 <div className="flex space-x-2">
@@ -380,7 +380,7 @@ return (
               </div>
             </div>
 
-<div className="mb-6">
+            <div className="mb-6">
               <h3 className="text-lg font-semibold mb-2">Faoliyat</h3>
               <div className="text-gray-400">
                 <div className="flex items-start space-x-2 mt-2">
@@ -439,8 +439,6 @@ return (
                 </div>
               </dialog>
 
-              {/* Yorliqlar */}
-
               <button
                 onClick={() =>
                   document.getElementById("labels_modal").showModal()
@@ -451,7 +449,7 @@ return (
                 <FaTags />
               </button>
 
-<dialog
+              <dialog
                 id="labels_modal"
                 className="modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
               >
