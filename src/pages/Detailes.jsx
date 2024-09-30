@@ -11,6 +11,8 @@ import {
   FaEdit,
   FaTrash,
 } from "react-icons/fa";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Details = () => {
   const [boards, setBoards] = useState([
@@ -212,81 +214,85 @@ const Details = () => {
     setEditingListId(null);
     toast.success("Ro'yxat sarlavhasi yangilandi!");
   };
+  const { theme } = useContext(ThemeContext);
 
   return (
-    <div className="font-sans text-white bg-gradient-to-r from-blue-900 to-purple-900 min-h-screen p-6 ml-[80px]">
-      <Toaster position="top-center" reverseOrder={false} />
-      <h1 className="text-4xl font-bold mb-4 text-center text-white">
-        Mening Ajoyib Trello Doskam
-      </h1>
-      {boards.map((board) => (
-        <div key={board.id} className="rounded-lg p-4 overflow-x-auto ">
-          <div className="flex gap-6 flex-wrap">
-            {board.lists.map((list) => (
-              <div
-                key={list.id}
-                className="bg-gray-800 rounded-lg p-4 min-w-[300px] shadow-lg"
-              >
-                {editingListId === list.id ? (
-                  <input
-                    type="text"
-                    className="w-full p-2 mb-2 bg-gray-700 rounded text-white"
-                    defaultValue={list.title}
-                    onBlur={(e) =>
-                      updateListTitle(board.id, list.id, e.target.value)
-                    }
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        updateListTitle(board.id, list.id, e.target.value);
+    <div className={`${theme ? "dark" : ""}`}>
+    <div className={`font-sans text-white min-h-screen p-6 ml-[80px] ${
+        theme === "dark" ? "bg-gradient-to-r from-blue-950 to-purple-950" : "bg-gradient-to-r from-blue-300 to-purple-300"
+      }`}>
+        <Toaster position="top-center" reverseOrder={false} />
+        <h1 className="text-4xl font-bold mb-4 text-center text-white">
+          Mening Ajoyib Trello Doskam
+        </h1>
+        {boards.map((board) => (
+          <div key={board.id} className="rounded-lg p-4 overflow-x-auto ">
+            <div className="flex gap-6 flex-wrap">
+              {board.lists.map((list) => (
+                <div
+                  key={list.id}
+                  className="bg-gray-800 rounded-lg p-4 min-w-[300px] shadow-lg"
+                >
+                  {editingListId === list.id ? (
+                    <input
+                      type="text"
+                      className="w-full p-2 mb-2 bg-gray-700 rounded text-white"
+                      defaultValue={list.title}
+                      onBlur={(e) =>
+                        updateListTitle(board.id, list.id, e.target.value)
                       }
-                    }}
-                    autoFocus
-                  />
-                ) : (
-                  <h3 className="mb-4 text-lg font-bold flex justify-between items-center">
-                    {list.title}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          updateListTitle(board.id, list.id, e.target.value);
+                        }
+                      }}
+                      autoFocus
+                    />
+                  ) : (
+                    <h3 className="mb-4 text-lg font-bold flex justify-between items-center">
+                      {list.title}
+                      <button
+                        onClick={() => startEditingList(list.id)}
+                        className="text-gray-400 hover:text-white"
+                      >
+                        <FaEdit />
+                      </button>
+                    </h3>
+                  )}
+                  <div className="space-y-3">
+                    {list.cards.map((card) => (
+                      <div
+                        key={card.id}
+                        onClick={() => openCardModal(card, list.title)}
+                        className="cursor-pointer bg-gray-700 rounded-lg p-3 hover:bg-gray-600 transition duration-200"
+                      >
+                        <h4 className="font-semibold mb-1">{card.title}</h4>
+                        <p className="text-sm text-gray-400 truncate">
+                          {card.description}
+                        </p>
+                      </div>
+                    ))}
                     <button
-                      onClick={() => startEditingList(list.id)}
-                      className="text-gray-400 hover:text-white"
+                      onClick={() => addCard(board.id, list.id)}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-2 transition duration-200"
                     >
-                      <FaEdit />
+                      + add task
                     </button>
-                  </h3>
-                )}
-                <div className="space-y-3">
-                  {list.cards.map((card) => (
-                    <div
-                      key={card.id}
-                      onClick={() => openCardModal(card, list.title)}
-                      className="cursor-pointer bg-gray-700 rounded-lg p-3 hover:bg-gray-600 transition duration-200"
-                    >
-                      <h4 className="font-semibold mb-1">{card.title}</h4>
-                      <p className="text-sm text-gray-400 truncate">
-                        {card.description}
-                      </p>
-                    </div>
-                  ))}
-                  <button
-                    onClick={() => addCard(board.id, list.id)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-2 transition duration-200"
-                  >
-                    + add task
-                  </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      {selectedCard && (
-        <dialog id="cardModal" className="modal">
-          <div className="modal-box w-12/12 max-w-3xl bg-gray-800 text-white">
-            <form method="dialog">
-              <button className=" mb-2 btn btn-sm btn-circle btn-primary text-white ml-[680px] -mt-[1100px]">
-                <FaTimes className="" />
-              </button>
-            </form>
+        {selectedCard && (
+          <dialog id="cardModal" className="modal">
+            <div className="modal-box w-12/12 max-w-3xl bg-gray-800 text-white">
+              <form method="dialog">
+                <button className=" mb-2 btn btn-sm btn-circle btn-primary text-white ml-[680px] -mt-[1100px]">
+                  <FaTimes className="" />
+                </button>
+              </form>
 
             <div className="mb-6">
               <div className="flex items-center justify-between">
@@ -301,10 +307,44 @@ const Details = () => {
                       );
                       if (newTitle) {
                         updateCardTitle(
+              <div className="mb-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-semibold">
+                    {selectedCard.title}
+                  </h2>
+                  <div className="flex space-x-2">
+                    <button
+                      className="btn btn-sm btn-info"
+                      onClick={() => {
+                        const newTitle = prompt(
+                          "Yangi karta sarlavhasini kiriting:",
+                          selectedCard.title
+                        );
+                        if (newTitle) {
+                          updateCardTitle(
+                            boards[0].id,
+                            boards[0].lists.find(
+                              (list) => list.title === selectedCard.listTitle
+                            ).id,
+                            selectedCard.id,
+                            newTitle
+                          );
+                          setSelectedCard({ ...selectedCard, title: newTitle });
+                          toast.success("Karta sarlavhasi yangilandi!");
+                        }
+                      }}
+                    >
+                      <FaEdit /> Tahrirlash
+                    </button>
+                    <button
+                      className="btn btn-sm btn-error"
+                      onClick={() => {
+                        deleteCard(
                           boards[0].id,
                           boards[0].lists.find(
                             (list) => list.title === selectedCard.listTitle
                           ).id,
+
                           selectedCard.id,
                           newTitle
                         );
@@ -315,20 +355,59 @@ const Details = () => {
                   >
                     <FaEdit /> Tahrirlash
                   </button>
+                          selectedCard.id
+                        );
+                        document.getElementById("cardModal").close();
+                      }}
+                    >
+                      <FaTrash /> O'chirish
+                    </button>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-400">
+                  ro'yxatda{" "}
+                  <span className="font-bold">{selectedCard.listTitle}</span>
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-2">Tavsif</h3>
+                <textarea
+                  className="w-full h-32 p-3 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={selectedCard.description}
+                  onChange={(e) =>
+                    setSelectedCard({
+                      ...selectedCard,
+                      description: e.target.value,
+                    })
+                  }
+                ></textarea>
+                <div className="flex mt-2 space-x-2">
                   <button
-                    className="btn btn-sm btn-error"
-                    onClick={() => {
-                      deleteCard(
+                    className="btn btn-sm btn-primary"
+                    onClick={() =>
+                      updateCardDescription(
                         boards[0].id,
                         boards[0].lists.find(
                           (list) => list.title === selectedCard.listTitle
                         ).id,
-                        selectedCard.id
-                      );
-                      document.getElementById("cardModal").close();
-                    }}
+                        selectedCard.id,
+                        selectedCard.description
+                      )
+                    }
                   >
-                    <FaTrash /> O'chirish
+                    Saqlash
+                  </button>
+                  <button
+                    className="btn btn-sm btn-ghost"
+                    onClick={() =>
+                      setSelectedCard({
+                        ...selectedCard,
+                        description: selectedCard.description,
+                      })
+                    }
+                  >
+                    Bekor qilish
                   </button>
                 </div>
               </div>
@@ -388,19 +467,28 @@ const Details = () => {
                   <p>
                     ushbu kartani {selectedCard.listTitle} ro'yxatiga qo'shdi
                   </p>
+
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-2">Faoliyat</h3>
+                <div className="text-gray-400">
+                  <div className="flex items-start space-x-2 mt-2">
+                    <span className="font-semibold">John Doe</span>
+                    <p>
+                      ushbu kartani {selectedCard.listTitle} ro'yxatiga qo'shdi
+                    </p>
+                  </div>
+                  <p className="text-xs text-gray-500">21 Sent 2024, 18:05</p>
                 </div>
-                <p className="text-xs text-gray-500">21 Sent 2024, 18:05</p>
+                <div className="mt-4">
+                  <textarea
+                    className="w-full h-20 p-3 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Izoh yozing..."
+                  ></textarea>
+                  <button className="btn btn-sm btn-primary mt-2">
+                    Izoh qo'shish
+                  </button>
+                </div>
               </div>
-              <div className="mt-4">
-                <textarea
-                  className="w-full h-20 p-3 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Izoh yozing..."
-                ></textarea>
-                <button className="btn btn-sm btn-primary mt-2">
-                  Izoh qo'shish
-                </button>
-              </div>
-            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <button
@@ -505,14 +593,30 @@ const Details = () => {
                 <span>Muqova</span>
                 <FaImage />
               </button>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { text: "A'zolar", icon: <FaUser /> },
+                  { text: "Yorliqlar", icon: <FaTags /> },
+                  { text: "Tekshirish ro'yxati", icon: <FaListAlt /> },
+                  { text: "Muddat", icon: <FaCalendarAlt /> },
+                  { text: "Biriktirma", icon: <FaPaperclip /> },
+                  { text: "Muqova", icon: <FaImage /> },
+                ].map((action, idx) => (
+                  <button
+                    key={idx}
+                    className="btn btn-outline btn-info flex items-center justify-between px-4 py-2"
+                  >
+                    <span>{action.text}</span>
+                    {action.icon}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        </dialog>
-      )}
+          </dialog>
+        )}
+      </div>
     </div>
   );
 };
 
 export default Details;
-
-/////////////////
