@@ -48,7 +48,8 @@ const Details = () => {
             {
               id: 3,
               title: "Yangi funksiyalarni testlash",
-              description: "Barcha yangi funksiyalarni ishga tushirishdan oldin sinchiklab tekshirish",
+              description:
+                "Barcha yangi funksiyalarni ishga tushirishdan oldin sinchiklab tekshirish",
             },
           ],
         },
@@ -59,7 +60,8 @@ const Details = () => {
             {
               id: 4,
               title: "Loyihani sozlash",
-              description: "React loyihasini ishga tushirish va kerakli paketlarni o'rnatish",
+              description:
+                "React loyihasini ishga tushirish va kerakli paketlarni o'rnatish",
             },
           ],
         },
@@ -293,9 +295,19 @@ const Details = () => {
                   <button
                     className="btn btn-sm btn-info"
                     onClick={() => {
-                      const newTitle = prompt("Yangi karta sarlavhasini kiriting:", selectedCard.title);
+                      const newTitle = prompt(
+                        "Yangi karta sarlavhasini kiriting:",
+                        selectedCard.title
+                      );
                       if (newTitle) {
-                        updateCardTitle(boards[0].id, boards[0].lists.find(list => list.title === selectedCard.listTitle).id, selectedCard.id, newTitle);
+                        updateCardTitle(
+                          boards[0].id,
+                          boards[0].lists.find(
+                            (list) => list.title === selectedCard.listTitle
+                          ).id,
+                          selectedCard.id,
+                          newTitle
+                        );
                         setSelectedCard({ ...selectedCard, title: newTitle });
                         toast.success("Karta sarlavhasi yangilandi!");
                       }
@@ -331,23 +343,37 @@ const Details = () => {
               <textarea
                 className="w-full h-32 p-3 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={selectedCard.description}
-                onChange={(e) => setSelectedCard({ ...selectedCard, description: e.target.value })}
+                onChange={(e) =>
+                  setSelectedCard({
+                    ...selectedCard,
+                    description: e.target.value,
+                  })
+                }
               ></textarea>
               <div className="flex mt-2 space-x-2">
-                <button 
+                <button
                   className="btn btn-sm btn-primary"
-                  onClick={() => updateCardDescription(
-                    boards[0].id,
-                    boards[0].lists.find(list => list.title === selectedCard.listTitle).id,
-                    selectedCard.id,
-                    selectedCard.description
-                  )}
+                  onClick={() =>
+                    updateCardDescription(
+                      boards[0].id,
+                      boards[0].lists.find(
+                        (list) => list.title === selectedCard.listTitle
+                      ).id,
+                      selectedCard.id,
+                      selectedCard.description
+                    )
+                  }
                 >
                   Saqlash
                 </button>
-                <button 
+                <button
                   className="btn btn-sm btn-ghost"
-                  onClick={() => setSelectedCard({ ...selectedCard, description: selectedCard.description })}
+                  onClick={() =>
+                    setSelectedCard({
+                      ...selectedCard,
+                      description: selectedCard.description,
+                    })
+                  }
                 >
                   Bekor qilish
                 </button>
@@ -359,7 +385,9 @@ const Details = () => {
               <div className="text-gray-400">
                 <div className="flex items-start space-x-2 mt-2">
                   <span className="font-semibold">John Doe</span>
-                  <p>ushbu kartani {selectedCard.listTitle} ro'yxatiga qo'shdi</p>
+                  <p>
+                    ushbu kartani {selectedCard.listTitle} ro'yxatiga qo'shdi
+                  </p>
                 </div>
                 <p className="text-xs text-gray-500">21 Sent 2024, 18:05</p>
               </div>
@@ -375,22 +403,108 @@ const Details = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              {[
-                { text: "A'zolar", icon: <FaUser /> },
-                { text: "Yorliqlar", icon: <FaTags /> },
-                { text: "Tekshirish ro'yxati", icon: <FaListAlt /> },
-                { text: "Muddat", icon: <FaCalendarAlt /> },
-                { text: "Biriktirma", icon: <FaPaperclip /> },
-                { text: "Muqova", icon: <FaImage /> },
-              ].map((action, idx) => (
-                <button
-                  key={idx}
-                  className="btn btn-outline btn-info flex items-center justify-between px-4 py-2"
-                >
-                  <span>{action.text}</span>
-                  {action.icon}
-                </button>
-              ))}
+              <button
+                onClick={() =>
+                  document.getElementById("memberModal").showModal()
+                }
+                className="btn btn-outline btn-info flex items-center justify-between px-4 py-2"
+              >
+                <span>A'zolar</span>
+                <FaUser />
+              </button>
+
+              <dialog
+                id="memberModal"
+                className="modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              >
+                <div className="modal-box relative w-304px h-128px bg-base-200 shadow-lg p-4">
+                  <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                      ✕
+                    </button>
+                  </form>
+                  <h3 className="font-bold text-lg mt-4">Members</h3>
+                  <input
+                    type="text"
+                    placeholder="Search members"
+                    className="input input-bordered w-full mt-2"
+                  />
+                  <p className="mt-4 text-sm">Board members</p>
+                  <div className="flex items-center mt-2">
+                    <div className="bg-yellow-500 text-black rounded-full w-8 h-8 flex items-center justify-center">
+                      AT
+                    </div>
+                    <p className="ml-2">Abdulloh Tursunov</p>
+                  </div>
+                </div>
+              </dialog>
+
+              {/* Yorliqlar */}
+
+              <button
+                onClick={() =>
+                  document.getElementById("labels_modal").showModal()
+                }
+                className="btn btn-outline btn-info flex items-center gap-2 justify-between px-4 py-2"
+              >
+                <span>Yorliqlar</span>
+                <FaTags />
+              </button>
+
+              <dialog
+                id="labels_modal"
+                className="modal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              >
+                <div className="modal-box relative w-22px h-32px bg-base-200 shadow-lg p-4">
+                  <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                      ✕
+                    </button>
+                  </form>
+                  <h3 className="font-bold text-lg mt-2">Yorliqlar</h3>
+                  <p className="mt-1">Rang tanlang:</p>
+                  <div className="flex flex-col mt-2">
+                    {/* Ranglar */}
+                    {[
+                      "bg-red-500",
+                      "bg-green-500",
+                      "bg-blue-500",
+                      "bg-yellow-500",
+                    ].map((color) => (
+                      <label key={color} className="flex items-center gap-1">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 mr-2  cursor-pointer"
+                        />
+                        <div
+                          className={`h-[32px] w-[450px]   ${color} cursor-pointer`}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </dialog>
+
+              {/* tekshirish ro'yhati  */}
+              <button className="btn btn-outline btn-info flex items-center justify-between px-4 py-2">
+                <span>Tekshirish ro'yxati</span>
+                <FaListAlt />
+              </button>
+
+              <button className="btn btn-outline btn-info flex items-center justify-between px-4 py-2">
+                <span>Muddat</span>
+                <FaCalendarAlt />
+              </button>
+
+              <button className="btn btn-outline btn-info flex items-center justify-between px-4 py-2">
+                <span>Biriktirma</span>
+                <FaPaperclip />
+              </button>
+
+              <button className="btn btn-outline btn-info flex items-center justify-between px-4 py-2">
+                <span>Muqova</span>
+                <FaImage />
+              </button>
             </div>
           </div>
         </dialog>
@@ -401,4 +515,4 @@ const Details = () => {
 
 export default Details;
 
-
+/////////////////
