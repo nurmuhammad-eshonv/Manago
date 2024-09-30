@@ -12,14 +12,14 @@ function Home() {
   const [color, setColor] = useState("gray"); // Default to gray
   const [description, setDescription] = useState("");
   const [boards, setBoards] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  console.log(token);
 
   // Fetch boards from the API on component mount
   useEffect(() => {
     const fetchBoards = async () => {
       try {
         const response = await axios.get("/boards/my-boards");
+        console.log(response.data.boards);
+        
         setBoards(response.data.boards); // Assuming the data structure has a boards array
       } catch (error) {
         console.error("Error fetching boards:", error.response ? error.response.data : error.message);
@@ -129,7 +129,7 @@ function Home() {
       <div className="flex flex-wrap gap-4 p-6">
         {boards.map((board, index) => (
           <div
-            onClick={() => navigate("/detailes")}
+            onClick={() => navigate(`/detailes/:${board.id}`)}
             key={index}
             className="cursor-pointer hover:opacity-0.8 w-[270px] h-[140px] border-2 border-gray-300 rounded-lg shadow-lg p-4 flex flex-col items-start transition-transform duration-300 transform hover:scale-105"
             style={{ backgroundColor: board.color }}

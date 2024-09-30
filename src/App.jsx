@@ -73,7 +73,7 @@ function App() {
         />
 
         <Route
-          path="/detailes"
+          path="/detailes/:id"
           element={
             token ? (
               <MainLoyaut>
