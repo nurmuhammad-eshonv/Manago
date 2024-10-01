@@ -3,8 +3,10 @@ import React, { useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAppStore } from "../zustand";
 
-const Login = ({ setToken }) => {
+const Login = () => {
+  const setUser = useAppStore((state) => state.setUser);
   const navigate = useNavigate();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -54,12 +56,10 @@ const Login = ({ setToken }) => {
           },
         }
       );
-      console.log("Login successful:", response.data);
 
-      const token = response.data.token;
-      localStorage.setItem("token", token);
-      setToken(token);
-      navigate("/");
+      console.log(response, response.status, response.data);
+
+      setUser(response.data);
     } catch (error) {
       console.error("Error during login:", error);
 

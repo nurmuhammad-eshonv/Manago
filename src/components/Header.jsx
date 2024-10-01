@@ -1,9 +1,15 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
+import { useAppStore } from "../zustand";
 
 function Header() {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const setUser = useAppStore((state) => state.setUser);
+
+  function logout() {
+    setUser(null);
+  }
 
   return (
     <div className={` ${theme === "dark" ? "bg-[#10141E]" : "bg-[#FFFFFF]"} `}>
@@ -91,20 +97,36 @@ function Header() {
             </div>
           </Link>
 
-          <div className="avatar-group -space-x-6 rtl:space-x-reverse">
-            <div className="avatar">
-              <div className="w-12">
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full">
                 <img
+                  alt="Tailwind CSS Navbar component"
                   src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  alt="User"
                 />
               </div>
             </div>
-            <div className="avatar placeholder w-8 h-8">
-              <div className="bg-neutral text-neutral-content">
-                <span>+1</span>
-              </div>
-            </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            >
+              <li>
+                <a className="justify-between">
+                  Profile
+                  <span className="badge">New</span>
+                </a>
+              </li>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li>
+                <button onClick={logout}>Logout</button>
+              </li>
+            </ul>
           </div>
         </div>
       </header>
