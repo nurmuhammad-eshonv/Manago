@@ -4,29 +4,36 @@ import { GoFileDirectory } from "react-icons/go";
 import { MdPublic, MdLock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "../axios/interceptor";
+import { useAppStore } from "../zustand";
 
 function Home() {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [color, setColor] = useState("gray"); // Default to gray
+  const [color, setColor] = useState("red");
   const [description, setDescription] = useState("");
   const [boards, setBoards] = useState([]);
 
-  // Fetch boards from the API on component mount
+
+  const setUser = useAppStore((state) => state.setUser);
+
+
   useEffect(() => {
     const fetchBoards = async () => {
       try {
         const response = await axios.get("/boards/my-boards");
         console.log(response.data.boards);
-        
+      
         setBoards(response.data.boards); // Assuming the data structure has a boards array
       } catch (error) {
-        console.error("Error fetching boards:", error.response ? error.response.data : error.message);
+        console.error(
+          "Error fetching boards:",
+          error.response ? error.response.data : error.message
+        );
       }
     };
     fetchBoards();
-  }, []); // Empty dependency array to run only once on mount
+  }, []);
 
   const resetForm = () => {
     setTitle("");
@@ -34,29 +41,35 @@ function Home() {
     setDescription("");
     setModalOpen(false);
   };
-
   const handleCreateBoard = () => {
     const newBoard = { name: title, description, color };
-
+  
     console.log("Creating board with data:", newBoard);
-
     axios
       .post("/boards/create", newBoard)
       .then((res) => {
         console.log("Board successfully created:", res.data);
-        setBoards([...boards, newBoard]); // Update state with new board
-        resetForm(); // Reset form after creation
+        setBoards([...boards, newBoard]);
+        resetForm();
       })
       .catch((err) => {
-        console.error(
-          "Error creating board:",
-          err.response ? err.response.data : err.message
-        );
+        if (err.response && err.response.data.message === "Token topilmadi") {
+          console.error("Token not found, logging out user.");
+          setUser(null); // Foydalanuvchini sistemadan chiqarish
+          navigate("/login"); // Login sahifasiga yo'naltirish
+        } else {
+          console.error(
+            "Error creating board:",
+            err.response ? err.response.data : err.message
+          );
+        }
       });
   };
+  
+  
 
   return (
-    <div className="ml-[90px]">
+    <div className="ml-[90px] animate-my-animate">
       <div className="flex items-center justify-between p-6">
         <h2 className="font-[700] text-[30px]">Files</h2>
         <div className="flex gap-[15px]">
@@ -84,11 +97,31 @@ function Home() {
                   <label className="block mt-1">
                     Color:
                     <div className="relative">
-                      <select onChange={(e) => setColor(e.target.value)} className="select w-full">
-                        <option value="red" className="text-red-600 font-bold">Red</option>
-                        <option value="gray" className="text-gray-500 font-bold">Gray</option>
-                        <option value="orange" className="text-orange-600 font-bold">Orange</option>
-                        <option value="green" className="text-green-600 font-bold">Green</option>
+                      <select
+                        onChange={(e) => setColor(e.target.value)}
+                        className="select w-full"
+                      >
+                        <option value="red" className="text-red-600 font-bold">
+                          Red
+                        </option>
+                        <option
+                          value="gray"
+                          className="text-gray-500 font-bold"
+                        >
+                          Gray
+                        </option>
+                        <option
+                          value="orange"
+                          className="text-orange-600 font-bold"
+                        >
+                          Orange
+                        </option>
+                        <option
+                          value="green"
+                          className="text-green-600 font-bold"
+                        >
+                          Green
+                        </option>
                       </select>
                     </div>
                   </label>
@@ -129,7 +162,7 @@ function Home() {
       <div className="flex flex-wrap gap-4 p-6">
         {boards.map((board, index) => (
           <div
-            onClick={() => navigate(`/detailes/:${board.id}`)}
+            onClick={() => navigate(`/detailes/${board.id}`)}
             key={index}
             className="cursor-pointer hover:opacity-0.8 w-[270px] h-[140px] border-2 border-gray-300 rounded-lg shadow-lg p-4 flex flex-col items-start transition-transform duration-300 transform hover:scale-105"
             style={{ backgroundColor: board.color }}

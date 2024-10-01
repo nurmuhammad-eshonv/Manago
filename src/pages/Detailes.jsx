@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import axios from "../axios/interceptor";
 import {
   FaTimes,
   FaUser,
@@ -14,9 +15,8 @@ import {
 } from "react-icons/fa";
 
 const Details = () => {
-  const params = useParams("")
-  console.log(params.id);
-  
+  const params = useParams();
+
   const [boards, setBoards] = useState([
     {
       id: 1,
@@ -73,40 +73,80 @@ const Details = () => {
     },
   ]);
 
+
+  const board = {
+    title: "Task titldse",
+    boardId: params.id,
+  };
+
+  // useEffect(() => {
+  //   const createTask = async () => {
+  //     try {
+  //       const response = await axios.post("/tasks/create", board);
+  //       console.log(response.data, response, "created");
+  //     } catch (error) {
+  //       console.error("Error creating task:", error);
+  //     }
+  //   };
+
+  //   createTask();
+  // }, [boards]);
+
   const [selectedCard, setSelectedCard] = useState(null);
   const [editingListId, setEditingListId] = useState(null);
+  const [newTaskName, setNewTaskName] = useState("");
+  const [currentListId, setCurrentListId] = useState(null);
+
+  useEffect(() => {
+    if (selectedCard) {
+      const modal = document.getElementById("cardModal");
+      if (modal) {
+        modal.showModal();
+      }
+    }
+  }, [selectedCard]);
 
   const openCardModal = (card, listTitle) => {
     setSelectedCard({ ...card, listTitle });
-    document.getElementById("cardModal").showModal();
   };
 
-  const addCard = (boardId, listId) => {
-    const cardName = prompt("Karta nomini kiriting:");
-    if (cardName) {
-      setBoards(
-        boards.map((board) => {
-          if (board.id === boardId) {
+  const addCard = () => {
+    if (!newTaskName.trim()) {
+      toast.error("Vazifa nomi bo'sh bo'lishi mumkin emas");
+      return;
+    }
+
+    setBoards((prevBoards) =>
+      prevBoards.map((board) => ({
+        ...board,
+        lists: board.lists.map((list) => {
+          if (list.id === currentListId) {
             return {
-              ...board,
-              lists: board.lists.map((list) => {
-                if (list.id === listId) {
-                  const newCard = {
-                    id: Date.now(),
-                    title: cardName,
-                    description: "",
-                  };
-                  return { ...list, cards: [...list.cards, newCard] };
-                }
-                return list;
-              }),
+              ...list,
+              cards: [
+                ...list.cards,
+                {
+                  id: Date.now(),
+                  title: newTaskName,
+                  description: "",
+                },
+              ],
             };
           }
-          return board;
-        })
-      );
-      toast.success("Karta muvaffaqiyatli qo'shildi!");
-    }
+          return list;
+        }),
+      }))
+    );
+
+    setNewTaskName("");
+    document.getElementById("my_modal_3").close();
+    toast.success("Karta muvaffaqiyatli qo'shildi!");
+  };
+
+  const openAddCardModal = (listId) => {
+    setCurrentListId(listId);
+    setNewTaskName("");
+    document.getElementById("my_modal_3").showModal();
   };
 
   const updateCardTitle = (boardId, listId, cardId, newTitle) => {
@@ -218,7 +258,7 @@ const Details = () => {
   };
 
   return (
-    <div className="font-sans text-white bg-gradient-to-r from-blue-900 to-purple-900 min-h-screen p-6 ml-[80px]">
+    <div className="animate-my-animate font-sans text-white bg-gradient-to-r from-blue-900 to-purple-900 min-h-screen p-6 ml-[80px]">
       <Toaster position="top-center" reverseOrder={false} />
       <h1 className="text-4xl font-bold mb-4 text-center text-white">
         Mening Ajoyib Trello Doskam
@@ -271,7 +311,7 @@ const Details = () => {
                     </div>
                   ))}
                   <button
-                    onClick={() => addCard(board.id, list.id)}
+                    onClick={() => openAddCardModal(list.id)}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-2 transition duration-200"
                   >
                     + add task
@@ -283,11 +323,11 @@ const Details = () => {
         </div>
       ))}
 
-      {selectedCard && (
-        <dialog id="cardModal" className="modal">
+      <dialog id="cardModal" className="modal">
+        {selectedCard && (
           <div className="modal-box w-12/12 max-w-3xl bg-gray-800 text-white">
             <form method="dialog">
-              <button className=" mb-2 btn btn-sm btn-circle btn-primary text-white ml-[680px] -mt-[1100px]">
+              <button className="mb-2 btn btn-sm btn-circle btn-primary text-white ml-[680px] -mt-[1100px]">
                 <FaTimes className="" />
               </button>
             </form>
@@ -487,7 +527,6 @@ const Details = () => {
                 </div>
               </dialog>
 
-              {/* tekshirish ro'yhati  */}
               <button className="btn btn-outline btn-info flex items-center justify-between px-4 py-2">
                 <span>Tekshirish ro'yxati</span>
                 <FaListAlt />
@@ -509,10 +548,37 @@ const Details = () => {
               </button>
             </div>
           </div>
-        </dialog>
-      )}
+        )}
+      </dialog>
+
+      <dialog id="my_modal_3" className="modal -mt-52">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <h3 className="font-bold text-lg">Add task name</h3>
+
+          <div className="flex gap-3 items-center mt-4">
+            <input
+              value={newTaskName}
+              onChange={(e) => setNewTaskName(e.target.value)}
+              type="text"
+              className="input input-bordered w-full"
+              placeholder="task name"
+            />
+            <button onClick={addCard} className="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };
 
 export default Details;
+
+
+

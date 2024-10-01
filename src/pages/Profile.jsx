@@ -1,15 +1,14 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const AdvancedProfile = () => {
   const [userData, setUserData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john@example.com',
-    role: 'Software Engineer',
+    firstName: "John",
+    lastName: "Doe",
+    email: "john@example.com",
+    role: "Software Engineer",
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState("profile");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,14 +31,14 @@ const AdvancedProfile = () => {
               <p className="text-blue-200 mb-6">{userData.role}</p>
             </div>
             <nav>
-              {['Profile', 'Portfolio', 'Messages', 'Settings'].map((item) => (
+              {["Profile", "Portfolio", "Messages", "Settings"].map((item) => (
                 <button
                   key={item}
                   onClick={() => setActiveTab(item.toLowerCase())}
                   className={`w-full text-left py-2 px-4 rounded mb-2 transition-colors duration-300 ${
                     activeTab === item.toLowerCase()
-                      ? 'bg-white bg-opacity-20 text-white'
-                      : 'text-blue-200 hover:bg-white hover:bg-opacity-10'
+                      ? "bg-white bg-opacity-20 text-white"
+                      : "text-blue-200 hover:bg-white hover:bg-opacity-10"
                   }`}
                 >
                   {item}
@@ -58,7 +57,10 @@ const AdvancedProfile = () => {
                     <label className="block text-blue-300 text-sm font-semibold mb-2">
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </label>
-                    <p className="text-white text-lg pb-2 border-b-2 border-blue-400 group-hover:border-pink-400 transition-colors duration-300">
+                    <p
+                      contentEditable
+                      className="text-white text-lg pb-2 border-b-2 border-blue-400 group-hover:border-pink-400 transition-colors duration-300"
+                    >
                       {value}
                     </p>
                   </div>
@@ -71,7 +73,10 @@ const AdvancedProfile = () => {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6 animate-fade-in"
+              >
                 {Object.entries(userData).map(([key, value]) => (
                   <div key={key}>
                     <label className="block text-blue-300 text-sm font-semibold mb-2">
@@ -80,7 +85,9 @@ const AdvancedProfile = () => {
                     <input
                       type="text"
                       value={value}
-                      onChange={(e) => setUserData({ ...userData, [key]: e.target.value })}
+                      onChange={(e) =>
+                        setUserData({ ...userData, [key]: e.target.value })
+                      }
                       className="w-full bg-white bg-opacity-20 text-white border-0 rounded-lg p-3 focus:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all duration-300"
                     />
                   </div>
