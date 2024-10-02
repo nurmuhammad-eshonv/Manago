@@ -1,9 +1,8 @@
-
 import React, { useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { Link } from "react-router-dom";
 const Register = () => {
   const navigate = useNavigate();
   const firstNameRef = useRef(null);
@@ -20,7 +19,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation logic
     const newErrors = {};
 
     if (!firstNameRef.current.value) {
@@ -42,13 +40,16 @@ const Register = () => {
     } else if (passwordRef.current.value.length < 8) {
       newErrors.password = "Password must be at least 8 characters long.";
     } else if (!/[A-Z]/.test(passwordRef.current.value)) {
-      newErrors.password = "Password must contain at least one uppercase letter.";
+      newErrors.password =
+        "Password must contain at least one uppercase letter.";
     } else if (!/[a-z]/.test(passwordRef.current.value)) {
-      newErrors.password = "Password must contain at least one lowercase letter.";
+      newErrors.password =
+        "Password must contain at least one lowercase letter.";
     } else if (!/\d/.test(passwordRef.current.value)) {
       newErrors.password = "Password must contain at least one number.";
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(passwordRef.current.value)) {
-      newErrors.password = "Password must contain at least one special character.";
+      newErrors.password =
+        "Password must contain at least one special character.";
     }
 
     if (passwordRef.current.value !== confirmPasswordRef.current.value) {
@@ -59,35 +60,41 @@ const Register = () => {
       newErrors.termsAccepted = "You must accept the terms and conditions.";
     }
 
-    // If errors exist, update the state and stop form submission
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // If no errors, proceed with form submission
     const formData = {
       firstName: firstNameRef.current.value,
       lastName: lastNameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
-      confirmPassword: confirmPasswordRef.current.value, // Include confirm password
+      confirmPassword: confirmPasswordRef.current.value,
     };
 
     try {
-      const response = await axios.post("https://trello.vimlc.uz/api/auth/register", formData, {
-        headers: {
-          "Content-Type": "application/json", 
-        },
-      });
+      const response = await axios.post(
+        "https://trello.vimlc.uz/api/auth/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       console.log("Registration successful:", response.data);
-      navigate("/login"); 
+      navigate("/login");
       setErrors({});
     } catch (error) {
       console.error("Error during registration:", error);
       if (error.response) {
         console.error("Response data:", error.response.data);
-        setErrors({ api: error.response.data.message || "Registration failed. Please try again." });
+        setErrors({
+          api:
+            error.response.data.message ||
+            "Registration failed. Please try again.",
+        });
       } else {
         setErrors({ api: "An error occurred during registration." });
       }
@@ -100,7 +107,8 @@ const Register = () => {
         <h1 className="text-4xl font-bold mb-4">MANAGO</h1>
         <p className="text-xl mb-2">Website For Developers</p>
         <p className="mb-8">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt.
         </p>
       </div>
 
@@ -113,7 +121,10 @@ const Register = () => {
         <form className="w-full max-w-md" onSubmit={handleSubmit}>
           {/* First Name */}
           <div className="mb-4">
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium text-gray-700"
+            >
               First Name
             </label>
             <input
@@ -123,11 +134,16 @@ const Register = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="John"
             />
-            {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
+            {errors.firstName && (
+              <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+            )}
           </div>
 
           <div className="mb-4">
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="lastName"
+              className="block text-sm font-medium text-gray-700"
+            >
               Last Name
             </label>
             <input
@@ -137,10 +153,15 @@ const Register = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Doe"
             />
-            {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
+            {errors.lastName && (
+              <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+            )}
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -150,11 +171,16 @@ const Register = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="johndoe@email.com"
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
           </div>
 
           <div className="mb-4 relative">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -169,14 +195,23 @@ const Register = () => {
               className="absolute right-2 top-11 transform -translate-y-1/2"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaRegEyeSlash className="text-gray-500" /> : <FaRegEye className="text-gray-500" />}
+              {showPassword ? (
+                <FaRegEyeSlash className="text-gray-500" />
+              ) : (
+                <FaRegEye className="text-gray-500" />
+              )}
             </button>
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
           </div>
 
           {/* Confirm Password */}
           <div className="mb-4 relative">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Confirm Password
             </label>
             <input
@@ -191,9 +226,17 @@ const Register = () => {
               className="absolute right-2 top-11 transform -translate-y-1/2"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
-              {showConfirmPassword ? <FaRegEyeSlash className="text-gray-500" /> : <FaRegEye className="text-gray-500" />}
+              {showConfirmPassword ? (
+                <FaRegEyeSlash className="text-gray-500" />
+              ) : (
+                <FaRegEye className="text-gray-500" />
+              )}
             </button>
-            {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.confirmPassword}
+              </p>
+            )}
           </div>
 
           {/* Terms & Conditions */}
@@ -207,11 +250,17 @@ const Register = () => {
             <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
               I accept the terms and conditions
             </label>
-            {errors.termsAccepted && <p className="text-red-500 text-xs mt-1">{errors.termsAccepted}</p>}
+            {errors.termsAccepted && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.termsAccepted}
+              </p>
+            )}
           </div>
 
           {/* Error Message from API */}
-          {errors.api && <p className="text-red-500 text-xs mt-1">{errors.api}</p>}
+          {errors.api && (
+            <p className="text-red-500 text-xs mt-1">{errors.api}</p>
+          )}
 
           {/* Submit Button */}
           <button
@@ -220,6 +269,13 @@ const Register = () => {
           >
             Register
           </button>
+
+
+          <Link to="/login">
+            <p className="text-center mt-2">
+              I have an account /<span className="text-blue-500">login</span>
+            </p>
+          </Link>
         </form>
       </div>
     </div>
