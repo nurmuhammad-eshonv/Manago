@@ -31,7 +31,7 @@ function Home() {
         console.log(error.response.data.message);
         
         if (error.response.data.message === "Not authorized") {
-          setUser(null); // Set user to null if unauthorized
+          setUser(null); 
         }
       }
     };
