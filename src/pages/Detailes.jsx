@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import axios from "../axios/interceptor";
+
 import {
   FaTimes,
   FaUser,
@@ -13,8 +14,11 @@ import {
   FaEdit,
   FaTrash,
 } from "react-icons/fa";
+import { useAppStore } from "../zustand";
 
 const Details = () => {
+  const setUser = useAppStore((state) => state.setUser);
+
   const params = useParams();
 
   const [boards, setBoards] = useState([
@@ -71,32 +75,13 @@ const Details = () => {
         },
       ],
     },
-  ]);
-
-
-  const board = {
-    title: "Task titldse",
-    boardId: params.id,
-  };
-
-  // useEffect(() => {
-  //   const createTask = async () => {
-  //     try {
-  //       const response = await axios.post("/tasks/create", board);
-  //       console.log(response.data, response, "created");
-  //     } catch (error) {
-  //       console.error("Error creating task:", error);
-  //     }
-  //   };
-
-  //   createTask();
-  // }, [boards]);
-
+  ])
   const [selectedCard, setSelectedCard] = useState(null);
   const [editingListId, setEditingListId] = useState(null);
   const [newTaskName, setNewTaskName] = useState("");
   const [currentListId, setCurrentListId] = useState(null);
-
+  const [listData, setListData] = useState([])
+ 
   useEffect(() => {
     if (selectedCard) {
       const modal = document.getElementById("cardModal");
@@ -110,12 +95,32 @@ const Details = () => {
     setSelectedCard({ ...card, listTitle });
   };
 
-  const addCard = () => {
+
+  useEffect(() => {
+    axios.get(`tasks/${params.id}`)
+    .then(res => (res.data.tasks)
+    (res))     
+  }, [listData])
+ 
+
+
+  const addCard = async () => {
     if (!newTaskName.trim()) {
       toast.error("Vazifa nomi bo'sh bo'lishi mumkin emas");
       return;
     }
-
+  
+    let board = {
+      title: newTaskName,
+      boardId: params.id,
+    };
+  
+    try {
+      const response = await axios.post("/tasks/create", board);
+    } catch (error) {
+      console.error("Error creating task:", error);
+    }
+  
     setBoards((prevBoards) =>
       prevBoards.map((board) => ({
         ...board,
@@ -137,16 +142,16 @@ const Details = () => {
         }),
       }))
     );
-
     setNewTaskName("");
     document.getElementById("my_modal_3").close();
     toast.success("Karta muvaffaqiyatli qo'shildi!");
   };
+  
 
   const openAddCardModal = (listId) => {
     setCurrentListId(listId);
     setNewTaskName("");
-    document.getElementById("my_modal_3").showModal();
+    document.getElementById("my_modal_3").showModal()
   };
 
   const updateCardTitle = (boardId, listId, cardId, newTitle) => {

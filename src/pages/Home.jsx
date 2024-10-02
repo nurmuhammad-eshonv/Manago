@@ -17,19 +17,22 @@ function Home() {
 
   const setUser = useAppStore((state) => state.setUser);
 
-
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const response = await axios.get("/boards/my-boards");
-        console.log(response.data.boards);
-      
-        setBoards(response.data.boards); // Assuming the data structure has a boards array
+        const response = await axios.get("/boards/my-boards")
+        console.log(response.data.boards)
+        setBoards(response.data.boards)
       } catch (error) {
         console.error(
-          "Error fetching boards:",
           error.response ? error.response.data : error.message
-        );
+         
+        )
+        console.log(error.response.data.message);
+        
+        if (error.response.data.message === "Not authorized") {
+          setUser(null); // Set user to null if unauthorized
+        }
       }
     };
     fetchBoards();
@@ -37,14 +40,12 @@ function Home() {
 
   const resetForm = () => {
     setTitle("");
-    setColor("gray");
+    setColor("red");
     setDescription("");
     setModalOpen(false);
   };
   const handleCreateBoard = () => {
-    const newBoard = { name: title, description, color };
-  
-    console.log("Creating board with data:", newBoard);
+    const newBoard = { name: title, description, color }
     axios
       .post("/boards/create", newBoard)
       .then((res) => {
@@ -55,8 +56,8 @@ function Home() {
       .catch((err) => {
         if (err.response && err.response.data.message === "Token topilmadi") {
           console.error("Token not found, logging out user.");
-          setUser(null); // Foydalanuvchini sistemadan chiqarish
-          navigate("/login"); // Login sahifasiga yo'naltirish
+          setUser(null); 
+          navigate("/login"); 
         } else {
           console.error(
             "Error creating board:",
@@ -64,11 +65,8 @@ function Home() {
           );
         }
       });
-  };
-  
-  
-
-  return (
+  }
+    return (
     <div className="ml-[90px] animate-my-animate">
       <div className="flex items-center justify-between p-6">
         <h2 className="font-[700] text-[30px]">Files</h2>
