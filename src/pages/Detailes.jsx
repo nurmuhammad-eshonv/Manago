@@ -15,6 +15,7 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import { useAppStore } from "../zustand";
+import { List } from "lucide-react";
 
 const Details = () => {
   const setUser = useAppStore((state) => state.setUser);
@@ -137,9 +138,34 @@ const Details = () => {
       return;
     }
 
+    const currentBoard = boards.find((board) =>
+      board.lists.some((list) => list.id === currentListId)
+    );
+    const currentList = currentBoard?.lists.find(
+      (list) => list.id === currentListId
+    );
+
+    if (!currentList) {
+      toast.error("Hozirgi list topilmadi");
+      return;
+    }
+
+    // statusni aniqlash
+    let taskStatus;
+    if (currentList.status === "Pending") {
+      taskStatus = "Pending";
+    } else if (currentList.status === "Doing") {
+      taskStatus = "Doing";
+    } else if (currentList.status === "Testing") {
+      taskStatus = "Testing";
+    } else if (currentList.status === "Done") {
+      taskStatus = "Done";
+    }
+
     let board = {
       title: newTaskName,
       boardId: params.id,
+      status: taskStatus,
     };
 
     try {
@@ -160,6 +186,7 @@ const Details = () => {
                 {
                   id: Date.now(),
                   title: newTaskName,
+                  status: taskStatus,
                   description: "",
                 },
               ],
@@ -169,9 +196,41 @@ const Details = () => {
         }),
       }))
     );
+
     setNewTaskName("");
     document.getElementById("my_modal_3").close();
     toast.success("Karta muvaffaqiyatli qo'shildi!");
+  };
+
+  const deleteCard = async (boardId, listId, cardId) => {
+    try {
+      const response = await axios.delete(`/tasks/${cardId}`);
+
+      setBoards((prevBoards) =>
+        prevBoards.map((board) => {
+          if (board.id === boardId) {
+            return {
+              ...board,
+              lists: board.lists.map((list) => {
+                if (list.id === listId) {
+                  return {
+                    ...list,
+                    cards: list.cards.filter((card) => card.id !== cardId),
+                  };
+                }
+                return list;
+              }),
+            };
+          }
+          return board;
+        })
+      );
+
+      toast.success("Karta muvaffaqiyatli o'chirildi!");
+    } catch (error) {
+      console.error("Kartani o'chirishda xatolik yuz berdi:", error);
+      toast.error("Kartani o'chirishda xatolik yuz berdi");
+    }
   };
 
   const openAddCardModal = (listId) => {
@@ -234,29 +293,6 @@ const Details = () => {
     );
     setSelectedCard({ ...selectedCard, description: newDescription });
     toast.success("Tavsif muvaffaqiyatli yangilandi!");
-  };
-
-  const deleteCard = (boardId, listId, cardId) => {
-    setBoards(
-      boards.map((board) => {
-        if (board.id === boardId) {
-          return {
-            ...board,
-            lists: board.lists.map((list) => {
-              if (list.id === listId) {
-                return {
-                  ...list,
-                  cards: list.cards.filter((card) => card.id !== cardId),
-                };
-              }
-              return list;
-            }),
-          };
-        }
-        return board;
-      })
-    );
-    toast.success("Karta muvaffaqiyatli o'chirildi!");
   };
 
   const startEditingList = (listId) => {
