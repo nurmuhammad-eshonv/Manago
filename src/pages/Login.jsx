@@ -58,7 +58,7 @@ const Login = () => {
       );
 
       console.log(response, response.status, response.data);
-
+      navigate("/")
       setUser(response.data);
     } catch (error) {
       console.error("Error during login:", error);
